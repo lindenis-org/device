@@ -1,0 +1,68 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          mpp
+# Required-Start:    $local_fs
+# Required-Stop::    $local_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: mpp dependent service
+# Description:       mpp dependent service
+### END INIT INFO
+
+USER=root
+
+IPLOADER_SERVER_NAME=iploader_server
+IPLOADER_SERVER=/usr/bin/$IPLOADER_SERVER_NAME
+IPLOADER_SERVER_PIDFILE=/var/run/$IPLOADER_SERVER_NAME.pid
+IPLOADER_SERVER_ARGS="/tmp"
+
+KFC_SERVER_PACK_NAME=kfc_server_pack
+KFC_SERVER_PACK=/usr/bin/$KFC_SERVER_PACK_NAME
+KFC_SERVER_PACK_PIDFILE=/var/run/$KFC_SERVER_PACK_NAME.pid
+KFC_SERVER_PACK_ARGS="/usr/lib/libkfc_server_enc.so /usr/lib/libip_loader_soft.so /tmp"
+
+test -f $IPLOADER_SERVER || exit 0
+test -f $KFC_SERVER_PACK || exit 0
+
+. /lib/lsb/init-functions
+
+case "$1" in
+	start)
+		log_daemon_msg "Starting iplodaer_server" "iploader_server"
+		start-stop-daemon -S -q -b -m -p $IPLOADER_SERVER_PIDFILE -c $USER -a $IPLOADER_SERVER -- $IPLOADER_SERVER_ARGS
+		log_end_msg $?
+		log_daemon_msg "Starting kfc_server_pack" "kfc_server_pack"
+		start-stop-daemon -S -q -b -m -p $KFC_SERVER_PACK_PIDFILE -c $USER -a $KFC_SERVER_PACK -- $KFC_SERVER_PACK_ARGS
+		log_end_msg $?
+		;;
+
+	stop)
+		log_daemon_msg "Stoping iploader_server" "iploader_server"
+		start-stop-daemon -K -q -p $IPLOADER_SERVER_PIDFILE
+		log_end_msg $?
+		log_daemon_msg "Stoping kfc_server_pack" "kfc_server_pack"
+		start-stop-daemon -K -q -p $KFC_SERVER_PACK_PIDFILE
+		log_end_msg $?
+		;;
+
+	restart|reload|force-reload)
+		log_daemon_msg "Restarting iploader_server" "iploader_server"
+		start-stop-daemon -K -R 5 -q -p $IPLOADER_SERVER_PIDFILE
+		start-stop-daemon -S -q -b -m -p $IPLOADER_SERVER_PIDFILE -c $USER -a $IPLOADER_SERVER -- $IPLOADER_SERVER_ARGS
+		log_end_msg $?
+		log_daemon_msg "Restarting kfc_server_pack" "kfc_server_pack"
+		start-stop-daemon -K -R 5 -q -p $KFC_SERVER_PACK_PIDFILE
+		start-stop-daemon -S -q -b -m -p $KFC_SERVER_PACK_PIDFILE -c $USER -a $KFC_SERVER_PACK -- $KFC_SERVER_PACK_ARGS
+		log_end_msg $?
+		;;
+
+	status)
+		status_of_proc -p $IPLOADER_SERVER_PIDFILE $IPLOADER_SERVER iploader_server && status_of_proc -p $KFC_SERVER_PACK_PIDFILE $KFC_SERVER_PACK kfc_server_pack && exit 0 || exit $?
+		;;
+
+	*)
+		log_action_msg "Usage: /etc/init.d/mpp {start|stop|restart|reload|force-reload|status}"
+		exit 2
+		;;
+esac
+exit 0

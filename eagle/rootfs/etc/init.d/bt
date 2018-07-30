@@ -1,0 +1,33 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          bt
+# Required-Start:    $local_fs
+# Required-Stop::    $local_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: initialize BT
+# Description:       power on BT and download the firmware
+### END INIT INFO
+
+#
+# Shell script to install Bluetooth firmware and attach BT part of
+# RTL8723BS
+#
+TTY="/dev/ttyS1"
+
+BT_POWER_MGR_PATH=/sys/class/rfkill/rfkill0
+BT_FW_PATH=/lib/firmware/rtl_bt
+
+test -d $BT_POWER_MGR_PATH || exit 1
+test -d $BT_FW_PATH || exit 1
+
+echo "Using device $TTY for initializing Bluetooth"
+
+#BT power initialize
+echo 0 > /sys/class/rfkill/rfkill0/state
+sleep 0.1
+echo 1 > /sys/class/rfkill/rfkill0/state
+
+rtk_hciattach -n -s 115200 $TTY rtk_h5 > /var/log/bt_start.log 2>&1 &
+
+exit 0
