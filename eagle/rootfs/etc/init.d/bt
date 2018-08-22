@@ -28,6 +28,8 @@ echo 0 > /sys/class/rfkill/rfkill0/state
 sleep 0.1
 echo 1 > /sys/class/rfkill/rfkill0/state
 
-rtk_hciattach -n -s 115200 $TTY rtk_h5 > /var/log/bt_start.log 2>&1 &
+#rtk_hciattach -n -s 115200 $TTY rtk_h5 > /var/log/bt_start.log 2>&1 &
+brcm_patchram_plus --patchram /etc/firmware/BCM4345C0.hcd --no2bytes --tosleep 1000 $TTY
+hciattach $TTY any
 
 exit 0
