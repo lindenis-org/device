@@ -34,8 +34,7 @@ size = 16
 [partition_start]
 
 [partition]
-    name         = boot_logo
-    downloadfile = "boot_logo.fex"
+    name         = bootlogo
     size         = 256
     user_type    = 0x8000
 
@@ -59,12 +58,7 @@ size = 16
 
 [partition]
     name         = private
-    size         = 1024
-    user_type    = 0x8000
-
-[partition]
-    name         = misc
-    size         = 128
+    size         = 640
     user_type    = 0x8000
 
 [partition]
