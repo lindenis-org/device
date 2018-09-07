@@ -1,4 +1,4 @@
-;A23 PAD application
+; S3 application
 ;---------------------------------------------------------------------------------------------------------
 ; port configuration:
 ; port_name = port:GPIO<mux><pull up/down><driver level><default value>
@@ -10,7 +10,7 @@
 
 [product]
 version = "100"
-machine = "zeta-evb"
+machine = "lindeni-s3"
 
 [platform]
 eraseflag   = 0
@@ -102,6 +102,7 @@ sdc_d2          = port:PF5<2><1><default><default>
 ;sdc_d7          = port:PC10<2><1><default><default>
 ;sdc_2xmode   	= 1
 ;sdc_ddrmode		= 1
+
 ;----------------------------------------------------------------------------------
 ;[twi_para] twi for boot code
 ;twi_port	= twi controller ID
@@ -152,12 +153,6 @@ pll10           = 297
 
 pll_ve          = 360
 pll_isp         = 360
-;---------------------------------------------------------------------------------------------------------
-;[pm_para] power management
-;standby_mode = 0-normal standby, 1-super standby
-;---------------------------------------------------------------------------------------------------------
-[pm_para]
-standby_mode		= 1
 
 ;*****************************************************************************
 ;sdram configuration
@@ -319,7 +314,7 @@ sflash_size             = 16
 ;ctp_wakeup : port for wakeup tp
 ;----------------------------------------------------------------------------------
 [ctp_para]
-ctp_used            = 1
+ctp_used            = 0
 ctp_name            = "gt9xxnew_ts"
 ctp_twi_id          = 0
 ctp_twi_addr        = 0x28
@@ -359,6 +354,7 @@ tkey_used           = 0
 tkey_twi_id         =
 tkey_twi_addr       =
 tkey_int            =
+
 ;----------------------------------------------------------------------------------
 ;[gpio_key] gpio_key used
 ;used			: 0: no used, 1:used
@@ -533,30 +529,30 @@ lcdgamma4iep        = 22
 lcd_power           =
 
 ;gpio_0  PWR-EN
-lcd_gpio_0          = port:PB03<1><default><default><default>
+;lcd_gpio_0          = port:PB03<1><default><default><default>
 
-lcdd2               = port:PD0<2><1><3><default>
-lcdd3               = port:PD1<2><1><3><default>
-lcdd4               = port:PD2<2><1><3><default>
-lcdd5               = port:PD3<2><1><3><default>
-lcdd6               = port:PD4<2><1><3><default>
-lcdd7               = port:PD5<2><1><3><default>
-lcdd10              = port:PD6<2><1><3><default>
-lcdd11              = port:PD7<2><1><3><default>
-lcdd12              = port:PD8<2><1><3><default>
-lcdd13              = port:PD9<2><1><3><default>
-lcdd14              = port:PD10<2><1><3><default>
-lcdd15              = port:PD11<2><1><3><default>
-lcdd18              = port:PD12<2><1><3><default>
-lcdd19              = port:PD13<2><1><3><default>
-lcdd20              = port:PD14<2><1><3><default>
-lcdd21              = port:PD15<2><1><3><default>
-lcdd22              = port:PD16<2><1><3><default>
-lcdd23              = port:PD17<2><1><3><default>
-lcdclk              = port:PD18<2><0><3><default>
-lcdde               = port:PD19<2><0><3><default>
-lcdhsync            = port:PD20<2><0><3><default>
-lcdvsync            = port:PD21<2><0><3><default>
+;lcdd2               = port:PD0<2><1><3><default>
+;lcdd3               = port:PD1<2><1><3><default>
+;lcdd4               = port:PD2<2><1><3><default>
+;lcdd5               = port:PD3<2><1><3><default>
+;lcdd6               = port:PD4<2><1><3><default>
+;lcdd7               = port:PD5<2><1><3><default>
+;lcdd10              = port:PD6<2><1><3><default>
+;lcdd11              = port:PD7<2><1><3><default>
+;lcdd12              = port:PD8<2><1><3><default>
+;lcdd13              = port:PD9<2><1><3><default>
+;lcdd14              = port:PD10<2><1><3><default>
+;lcdd15              = port:PD11<2><1><3><default>
+;lcdd18              = port:PD12<2><1><3><default>
+;lcdd19              = port:PD13<2><1><3><default>
+;lcdd20              = port:PD14<2><1><3><default>
+;lcdd21              = port:PD15<2><1><3><default>
+;lcdd22              = port:PD16<2><1><3><default>
+;lcdd23              = port:PD17<2><1><3><default>
+;lcdclk              = port:PD18<2><0><3><default>
+;lcdde               = port:PD19<2><0><3><default>
+;lcdhsync            = port:PD20<2><0><3><default>
+;lcdvsync            = port:PD21<2><0><3><default>
 
 ;----------------------------------------------------------------------------------
 ;pwm config
@@ -1374,7 +1370,7 @@ LV1_volt = 1200
 ;device have pin PA1 PA2
 ;----------------------------------------------------------------------------------
 [Vdevice]
-Vdevice_used        = 1
+Vdevice_used        = 0
 Vdevice_0           = port:PA01<5><1><2><default>
 Vdevice_1           = port:PA02<5><1><2><default>
 
