@@ -1402,11 +1402,11 @@ LV3_volt = 1000
 ; /sys/class/leds/led_0/echo 1 > brightness  ; light led
 ;----------------------------------------------------------------------------------
 [leds_para]
-leds_used = 0
-;led_0 = port:PG07<1><default><default><1>  
-;led_0_active_low = 0
-;led_1 = port:PC10<1><default><default><1>
-;led_1_active_low = 0
+leds_used = 1
+led_0 = port:PG11<1><default><default><1>
+led_0_active_low = 0
+led_1 = port:PG12<1><default><default><1>
+led_1_active_low = 0
 ;led_2 = port:PC04<1><default><default><1>
 ;led_2_active_low = 0
 ;led_3 = port:PE24<1><default><default><1>
