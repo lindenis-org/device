@@ -561,6 +561,10 @@ lcd_power           =
 pwm_used            = 1
 pwm_positive        = port:PB04<2><0><default><default>
 
+[pwm1_para]
+pwm_used            = 1
+pwm_positive        = port:PB05<2><0><default><default>
+
 ;--------------------------------------------------------
 ;gpio_0: ep952 reset
 ;gpio_1: pin of detecting hpd
