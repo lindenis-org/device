@@ -1,0 +1,40 @@
+#!/bin/sh
+#
+# Start the network....
+#
+
+# Debian ifupdown needs the /run/network lock directory
+mkdir -p /run/network
+
+INTFC="/data/network/interfaces"
+
+case "$1" in
+  start)
+	printf "Starting network: "
+	if [ ! -f $INTFC ] ; then
+		mkdir -p /data/network
+		echo "auto eth0" > $INTFC
+		echo "iface eth0 inet static" >> $INTFC
+		echo "  address 192.168.3.168" >> $INTFC
+		echo "  netmask 255.255.255.0" >> $INTFC
+		echo "  gateway 192.168.3.1" >> $INTFC
+	fi
+	/sbin/ifup -a
+	[ $? = 0 ] && echo "OK" || echo "FAIL"
+	;;
+  stop)
+	printf "Stopping network: "
+	/sbin/ifdown -a
+	[ $? = 0 ] && echo "OK" || echo "FAIL"
+	;;
+  restart|reload)
+	"$0" stop
+	"$0" start
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?
+

@@ -1,0 +1,26 @@
+#!/bin/sh
+#
+# Start S50ldcam-bar....
+#
+
+[ -f /usr/bin/ldcam-bar ] || exit 0
+
+case "$1" in
+  start)
+    printf "Starting ldcam-bar: "
+	start-stop-daemon -S -m -b -p /var/run/ldcam-bar.pid \
+		-x /usr/bin/ldcam-bar
+	[ $? = 0 ] && echo "OK" || echo "FAIL"
+	;;
+  stop)
+    printf "Stopping ldcam-bar: "
+    start-stop-daemon -K -p /var/run/ldcam-bar.pid \
+		-x /usr/bin/ldcam-bar
+	[ $? = 0 ] && echo "OK" || echo "FAIL"
+	;;
+  *)
+    echo "Usage: $0 {start|stop}"
+	exit 1
+esac
+
+exit $?

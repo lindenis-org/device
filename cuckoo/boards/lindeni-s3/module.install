@@ -1,0 +1,12 @@
+sunxi-keyboard.ko
+ldpwm.ko
+xradio_mac.ko
+xradio_core.ko
+xradio_wlan.ko
+videobuf-core.ko
+videobuf-dma-contig.ko
+cci.ko
+vfe_os.ko
+vfe_subdev.ko
+ov2735_mipi.ko
+vfe_v4l2.ko

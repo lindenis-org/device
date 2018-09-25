@@ -1,0 +1,4 @@
+source /data/network/interfaces
+
+auto lo
+iface lo inet loopback

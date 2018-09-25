@@ -1,0 +1,25 @@
+#!/bin/sh
+#
+# S02insmod This script insmod module at boot
+
+case "$1" in
+	start|"")
+		insmod /lib/modules/`uname -r`/sunxi-keyboard.ko
+		insmod /lib/modules/`uname -r`/ldpwm.ko
+		# Insmod Wi-Fi driver
+		insmod /lib/modules/`uname -r`/xradio_mac.ko
+		insmod /lib/modules/`uname -r`/xradio_core.ko
+		insmod /lib/modules/`uname -r`/xradio_wlan.ko
+		# Insmod CSI
+		insmod /lib/modules/`uname -r`/videobuf-core.ko
+		insmod /lib/modules/`uname -r`/videobuf-dma-contig.ko
+		insmod /lib/modules/`uname -r`/cci.ko
+		insmod /lib/modules/`uname -r`/vfe_os.ko
+		insmod /lib/modules/`uname -r`/vfe_subdev.ko
+		insmod /lib/modules/`uname -r`/ov2735_mipi.ko
+		insmod /lib/modules/`uname -r`/vfe_v4l2.ko
+		;;
+	stop)
+		echo "FIXED ME, need to do something?"
+		;;
+esac
