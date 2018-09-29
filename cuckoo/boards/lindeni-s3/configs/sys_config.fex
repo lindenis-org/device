@@ -413,8 +413,8 @@ screen1_output_mode      = 4
 fb0_format               = 0
 fb0_pixel_sequence       = 0
 fb0_scaler_mode_enable   = 0
-fb0_width                = 0
-fb0_height               = 0
+fb0_width                = 240
+fb0_height               = 320
 
 fb1_format               = 0
 fb1_pixel_sequence       = 0
@@ -479,17 +479,17 @@ degree0                  = 1
 [lcd0_para]
 lcd_used            = 1
 
-lcd_driver_name     = "inn70041w15a"
+lcd_driver_name     = "s2003l41g"
 
 lcd_if              = 0
 
-lcd_x               = 800
-lcd_y               = 480
+lcd_x               = 240
+lcd_y               = 320
 
-lcd_width           = 154
-lcd_height          = 86
+lcd_width           = 34
+lcd_height          = 47
 
-lcd_dclk_freq       = 30
+lcd_dclk_freq       = 20
 
 lcd_pwm_used        = 1
 lcd_pwm_ch          = 0
@@ -497,17 +497,25 @@ lcd_pwm_freq        = 50000
 lcd_pwm_pol         = 0
 lcd_pwm_max_limit   = 255
 
-lcd_hbp             = 88
-lcd_ht              = 928
-lcd_hspw            = 48
+;lcd_hbp             = 20
+;lcd_ht              = 298
+;lcd_hspw            = 10
 
-lcd_vbp             = 32
-lcd_vt              = 525
-lcd_vspw            = 3
+;lcd_vbp             = 8
+;lcd_vt              = 336
+;lcd_vspw            = 4
 
-lcd_frm             = 0
+lcd_hbp             = 69
+;10 + 20 + 10 + 240*3 = 760  real set 1000
+lcd_ht              = 1000
+lcd_hspw            = 10
+lcd_vbp             = 5
+lcd_vt              = 340
+lcd_vspw            = 2
 
-lcd_hv_clk_phase    = 2
+lcd_frm             = 2
+
+lcd_hv_clk_phase    = 0
 lcd_hv_sync_polarity = 0
 
 lcd_gamma_en        = 0
@@ -518,41 +526,40 @@ lcd_cpu_mode        = 0
 lcd_cpu_te          = 0
 lcd_cpu_if 			= 0
 
-lcd_hv_if	    	= 0
+lcd_hv_if	    	= 8
 lcd_hv_srgb_seq	    = 0
-lcd_rb_swap			= 0
+lcd_rb_swap			= 1
 
 lcdgamma4iep        = 22
 
-;lcd_bl_en           = port:PB04<1><default><default><1>
+lcd_bl_en           = port:PC09<1><default><default><1>
 
-lcd_power           =
+lcd_power           = ""
 
-;gpio_0  PWR-EN
-;lcd_gpio_0          = port:PB03<1><default><default><default>
+;gpio_0  LCD-CSX
+lcd_gpio_0          = port:PB10<1><default><default><1>
+;gpio_1  LCD-SCL
+lcd_gpio_1          = port:PB08<1><default><default><0>
+;gpio_2  LCD-SDA
+lcd_gpio_2          = port:PB09<1><default><default><0>
+;gpio_3  LCD-RST
+lcd_gpio_3          = port:PC08<1><default><default><0>
+;gpio_4  PWR-EN
+lcd_gpio_4          = port:PC04<1><default><default><1>
 
-;lcdd2               = port:PD0<2><1><3><default>
-;lcdd3               = port:PD1<2><1><3><default>
-;lcdd4               = port:PD2<2><1><3><default>
-;lcdd5               = port:PD3<2><1><3><default>
-;lcdd6               = port:PD4<2><1><3><default>
-;lcdd7               = port:PD5<2><1><3><default>
-;lcdd10              = port:PD6<2><1><3><default>
-;lcdd11              = port:PD7<2><1><3><default>
-;lcdd12              = port:PD8<2><1><3><default>
-;lcdd13              = port:PD9<2><1><3><default>
-;lcdd14              = port:PD10<2><1><3><default>
-;lcdd15              = port:PD11<2><1><3><default>
-;lcdd18              = port:PD12<2><1><3><default>
-;lcdd19              = port:PD13<2><1><3><default>
-;lcdd20              = port:PD14<2><1><3><default>
-;lcdd21              = port:PD15<2><1><3><default>
-;lcdd22              = port:PD16<2><1><3><default>
-;lcdd23              = port:PD17<2><1><3><default>
-;lcdclk              = port:PD18<2><0><3><default>
-;lcdde               = port:PD19<2><0><3><default>
-;lcdhsync            = port:PD20<2><0><3><default>
-;lcdvsync            = port:PD21<2><0><3><default>
+lcdd3               = port:PD1<2><0><2><default>
+lcdd4               = port:PD2<2><0><2><default>
+lcdd5               = port:PD3<2><0><2><default>
+lcdd6               = port:PD4<2><0><2><default>
+lcdd7               = port:PD5<2><0><2><default>
+lcdd10              = port:PD6<2><0><2><default>
+lcdd11              = port:PD7<2><0><2><default>
+lcdd12              = port:PD8<2><0><2><default>
+
+lcdclk              = port:PD18<2><0><3><default>
+lcdde               = port:PD19<2><0><3><default>
+lcdhsync            = port:PD20<2><0><3><default>
+lcdvsync            = port:PD21<2><0><3><default>
 
 ;----------------------------------------------------------------------------------
 ;pwm config
