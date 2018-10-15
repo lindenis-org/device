@@ -30,7 +30,7 @@ enum module_type {
 	MODULE_ISE,
 	MOUDLE_ISP,
 	MODULE_VE,
-	MODULE_SAMP,
+	MODULE_EIS,
 	MODULE_NUM
 };
 

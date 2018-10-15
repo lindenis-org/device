@@ -64,11 +64,12 @@ enum CdxParserTypeE
     CDX_PARSER_G729,
     CDX_PARSER_DSD,
     CDX_PARSER_AIFF,
-    CDX_PARSER_ID3,
+    CDX_PARSER_ID3V2,
     CDX_PARSER_ENV,
     CDX_PARSER_SSTR_PLAYREADY,
     CDX_PARSER_AWRAWSTREAM,
     CDX_PARSER_AWSPECIALSTREAM,
+    CDX_PARSER_PLS,
 };
 
 typedef struct CdxPacketS CdxPacketT;
@@ -82,6 +83,20 @@ typedef struct CdxParserS CdxParserT;
 #define FIRST_PART      0x0002
 #define LAST_PART       0x0004
 #define KEY_FRAME       0x0008
+
+//* AW_SEEK_PREVIOUS_SYNC means seek to the sync frame privious to the timeUs.
+//* AW_SEEK_NEXT_SYNC means seek to the sync frame next to the timeUs.
+//* AW_SEEK_CLOSEST_SYNC means seek to the sync frame closest to the timeUs.
+//* AW_SEEK_CLOSEST means seek to the closest frame to the timeUs.
+//* AW_SEEK_THUMBNAIL means in the thumbnail mode,seek to the sync frame privious to the timeUs.
+typedef enum SeekModeType
+{
+    AW_SEEK_PREVIOUS_SYNC,
+    AW_SEEK_NEXT_SYNC,
+    AW_SEEK_CLOSEST_SYNC,
+    AW_SEEK_CLOSEST,
+    AW_SEEK_THUMBNAIL,
+}SeekModeType;
 
 struct CdxPacketS
 {
@@ -124,7 +139,8 @@ enum EPARSERNOTIFY  //* notify.
     PARSER_NOTIFY_VIDEO_STREAM_CHANGE = PARSER_NOTIFY_VALID_RANGE_MIN,
     PARSER_NOTIFY_AUDIO_STREAM_CHANGE,
     PARSER_NOTIFY_TIMESHIFT_END_INFO,
-
+    PARSER_NOTIFY_META_DATA,
+    PARSER_NOTIFY_HLS_DISCONTINUITY,
     PARSER_NOTIFY_MAX,
 };
 CHECK_PARSER_NOTIFY_MAX_VALID(PARSER_NOTIFY_MAX)
@@ -170,7 +186,8 @@ enum CdxParserCommandE
 
     // for cmcc timeShift set lastSeqNum
     CDX_PSR_CMD_SET_TIMESHIFT_LAST_SEQNUM,
-
+    CDX_PSR_CMD_SET_HLS_DISCONTINUITY,
+    CDX_PSR_CMD_SET_HLS_STREAM_FORMAT_CHANGE,
     // parser and stream use the same setCallback cmd,
     // the code below must be the end of  this structure
     CDX_PSR_CMD_SET_CALLBACK = STREAM_CMD_SET_CALLBACK,
@@ -227,9 +244,11 @@ struct CdxProgramS
     SubtitleStreamInfo subtitle[SUBTITLE_STREAM_LIMIT];
     cdx_uint64 audioIndexMask;
     cdx_uint64 videoIndexMask;
+    cdx_int32 metadataNum;
 };
 
 #define PROGRAM_LIMIT 1 //no switch program interface now, so limit 1
+#define MAX_CONTENT_LEN 64
 
 struct CdxMediaInfoS
 {
@@ -242,37 +261,54 @@ struct CdxMediaInfoS
 
     void *privData;
 
-    cdx_uint8   album[64];
+    cdx_uint8   album[MAX_CONTENT_LEN];
     cdx_int32   albumsz;
-    cdx_int32    albumCharEncode;
+    cdx_int32   albumCharEncode;
 
-    cdx_uint8   author[64];
+    cdx_uint8   author[MAX_CONTENT_LEN];
     cdx_int32   authorsz;
     cdx_int32   authorCharEncode;
 
-    cdx_uint8   genre[64];
+    cdx_uint8   genre[MAX_CONTENT_LEN];
     cdx_int32   genresz;
     cdx_int32   genreCharEncode;
 
-    cdx_uint8   title[64];
+    cdx_uint8   title[MAX_CONTENT_LEN];
     cdx_int32   titlesz;
     cdx_int32   titleCharEncode;
 
-    cdx_uint8   year[64];
+    cdx_uint8   year[MAX_CONTENT_LEN];
     cdx_int32   yearsz;
     cdx_int32   yearCharEncode;
 
-    cdx_uint8   composer[64];
-    cdx_uint8   date[64];
-    cdx_uint8   artist[64];
-    cdx_uint8   writer[64];
-    cdx_uint8   albumArtist[64];
-    cdx_uint8   compilation[64];
-    cdx_uint8   location[64];
+    cdx_uint8   composer[MAX_CONTENT_LEN];
+    cdx_int32   composersz;
+
+    cdx_uint8   date[MAX_CONTENT_LEN];
+    cdx_int32   datesz;
+
+    cdx_uint8   artist[MAX_CONTENT_LEN];
+    cdx_int32   artistsz;
+
+    cdx_uint8   writer[MAX_CONTENT_LEN];
+    cdx_int32   writersz;
+
+    cdx_uint8   albumArtist[MAX_CONTENT_LEN];
+    cdx_int32   albumArtistsz;
+
+    cdx_uint8   compilation[MAX_CONTENT_LEN];
+    cdx_int32   compilationsz;
+
+    cdx_uint8   cdTrackNumber[MAX_CONTENT_LEN];
+    cdx_int32   cdTrackNumbersz;
+
+    cdx_uint8   location[MAX_CONTENT_LEN];
     cdx_uint8   rotate[4];
     cdx_int32   discNumber;
     cdx_uint8   *pAlbumArtBuf;
     cdx_int32    nAlbumArtBufSize;
+
+    int         id3v2HadParsed;
 };
 
 #define MUTIL_AUDIO         0x0001U /*will disable switch audio*/
@@ -308,6 +344,9 @@ struct CdxMediaInfoS
 #define SEGMENT_PLAYREADY   0x8000U
 
 #define MutilAudioStream(flags) (!!(flags & MUTIL_AUDIO))
+//For successive ID3
+#define DO_NOT_EXTRACT_ID3_METADATA 0x10000U
+#define SUCCESS_STREAM_TO_CHILD     0x20000U
 
 typedef struct HdcpOpsS HdcpOps;
 struct HdcpOpsS
@@ -352,7 +391,7 @@ struct CdxParserOpsS
 
     cdx_int32 (*getMediaInfo)(CdxParserT *, CdxMediaInfoT * /* MediaInfo */);
 
-    cdx_int32 (*seekTo)(CdxParserT *, cdx_int64 /* timeUs */);
+    cdx_int32 (*seekTo)(CdxParserT *, cdx_int64 /* timeUs */, SeekModeType);
 
     cdx_uint32 (*attribute)(CdxParserT *); /*return falgs define as open's falgs*/
 
@@ -615,12 +654,12 @@ static inline cdx_int32 CdxParserGetMediaInfo(CdxParserT *parser, CdxMediaInfoT 
     return ret;
 }
 
-static inline cdx_int32 CdxParserSeekTo(CdxParserT *parser, cdx_int64 timeUs)
+static inline cdx_int32 CdxParserSeekTo(CdxParserT *parser, cdx_int64 timeUs, SeekModeType seekModeType)
 {
     CDX_CHECK(parser);
     CDX_CHECK(parser->ops);
     CDX_CHECK(parser->ops->seekTo);
-    return parser->ops->seekTo(parser, timeUs);
+    return parser->ops->seekTo(parser, timeUs, seekModeType);
 }
 
 static inline cdx_uint32 CdxParserAttribute(CdxParserT *parser)

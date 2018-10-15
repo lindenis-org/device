@@ -42,6 +42,7 @@ struct video_fmt {
 	unsigned int capturemode;
 	unsigned int use_current_win;
 	unsigned int wdr_mode;
+	unsigned int drop_frame_num;
 };
 
 struct osd_fmt {
@@ -98,5 +99,6 @@ int video_event_unsubscribe(struct isp_video_device *video, unsigned int type);
 int video_wait_event(struct isp_video_device *video);
 int video_dequeue_event(struct isp_video_device *video, struct video_event *vi_event);
 int video_set_top_clk(struct isp_video_device *video, unsigned int rate);
+int video_set_vin_reset_time(struct isp_video_device *video, unsigned int time);
 
 #endif /* __VIDEO_H_ */

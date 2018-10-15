@@ -75,6 +75,8 @@ typedef struct DEMUX_VIDEO_STREAM_INFO_S
     int   mFrameRate;   // x1000
     int   mAvgBitsRate;
     int   mMaxBitsRate;
+    int   nCodecSpecificDataLen;
+    char* pCodecSpecificData;
 }DEMUX_VIDEO_STREAM_INFO_S;
 
 

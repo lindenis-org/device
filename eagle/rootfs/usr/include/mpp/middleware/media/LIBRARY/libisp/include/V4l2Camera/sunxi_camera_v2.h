@@ -23,7 +23,6 @@
 #include <linux/videodev2.h>
 
 #include <stdbool.h>
-
 /*  Flags for 'capability' and 'capturemode' fields */
 #define V4L2_MODE_HIGHQUALITY		0x0001
 #define V4L2_MODE_VIDEO			0x0002
@@ -205,8 +204,10 @@ struct vin_pattern_config {
 	__u32 ptn_fmt;
 	__u32 ptn_type;
 };
-
-
+//lwj
+struct vin_reset_time {
+	__u32 reset_time;
+};
 #define VIDIOC_ISP_AE_STAT_REQ \
 	_IOWR('V', BASE_VIDIOC_PRIVATE + 1, struct isp_stat_buf)
 #define VIDIOC_ISP_HIST_STAT_REQ \
@@ -229,7 +230,9 @@ struct vin_pattern_config {
 	_IOWR('V', BASE_VIDIOC_PRIVATE + 10, struct isp_debug_mode)
 #define VIDIOC_VIN_PTN_CFG \
 	_IOWR('V', BASE_VIDIOC_PRIVATE + 11, struct vin_pattern_config)
-
+#define VIDIOC_VIN_RESET_TIME \
+	_IOWR('V', BASE_VIDIOC_PRIVATE + 12, struct vin_reset_time)
+//lwj
 /*
  * Events
  *
@@ -329,6 +332,15 @@ struct isp_table_reg_map {
 	unsigned int size;
 };
 
+struct actuator_ctrl {
+	unsigned int code;
+};
+
+struct actuator_para {
+	unsigned short code_min;
+	unsigned short code_max;
+};
+
 /*
  * Camera Sensor IOCTLs
  */
@@ -342,6 +354,11 @@ struct isp_table_reg_map {
 	_IOWR('V', BASE_VIDIOC_PRIVATE + 62, struct sensor_fps)
 #define VIDIOC_VIN_SENSOR_GET_TEMP \
 	_IOWR('V', BASE_VIDIOC_PRIVATE + 63, struct sensor_temp)
+
+#define VIDIOC_VIN_ACT_SET_CODE \
+	_IOWR('V', BASE_VIDIOC_PRIVATE + 64, struct actuator_ctrl)
+#define VIDIOC_VIN_ACT_INIT \
+	_IOWR('V', BASE_VIDIOC_PRIVATE + 65, struct actuator_para)
 
 #define VIDIOC_VIN_ISP_LOAD_REG \
 	_IOWR('V', BASE_VIDIOC_PRIVATE + 70, struct isp_table_reg_map)

@@ -161,6 +161,7 @@ typedef struct AI_CHN_PARAM_S
 
 typedef struct AUDIO_FRAME_S
 {
+    AUDIO_SAMPLE_RATE_E mSamplerate;   /* sample rate */
     AUDIO_BIT_WIDTH_E   mBitwidth;     /*audio frame bitwidth*/
     AUDIO_SOUND_MODE_E  mSoundmode;    /*audio frame momo or stereo mode*/
     void                *mpAddr;

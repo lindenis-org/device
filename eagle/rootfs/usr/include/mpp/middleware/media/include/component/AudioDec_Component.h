@@ -118,7 +118,7 @@ struct AUDIODECDATATYPE {
 
     struct list_head        mIdleOutFrameList;  //ADecCompOutputFrame
     struct list_head        mReadyOutFrameList; //for non-tunnel mode. when mOutputPortTunnelFlag == FALSE, use it to store decoded frames.
-    struct list_head        mUsedOutFrameList;  //for non-tunnel mode. when mOutputPortTunnelFlag == FALSE, use it to store user occupied frames.
+    struct list_head        mUsedOutFrameList;  //for tunnel-mode; also for non-tunnel mode. when mOutputPortTunnelFlag == FALSE, use it to store user occupied frames.
 
     int                     mFrameNodeNum;      //ADecCompOutputFrame counter
 

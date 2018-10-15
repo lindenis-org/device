@@ -21,6 +21,7 @@
 // #include "common_vi.h"
 // #include "plat_error.h"
 #include "isp_type.h"
+#include "isp_manage.h"
 #include "mm_comm_vi.h"
 #include "isp_comm.h"
 #include "isp_tuning_priv.h"
@@ -179,6 +180,16 @@ typedef struct
 	struct isp_tuning_pltm_cfg pltm_cfg;//HW_ISP_CFG_TUNING_PLTM
 	// struct isp_tuning_pltm_table_cfg pltm_table_cfg;// HW_ISP_CFG_TUNING_PLTM_TBL
 } ISP_DYNAMIC_PLTM_S;
+
+typedef struct
+{
+	HW_U32 pic_w;
+	HW_U32 pic_h;
+
+	struct isp_stats_s stats;
+	struct isp_wb_gain wb_gain_saved;
+	bool enabled;
+}ISP_STATS_CONTEXT_S;
 
 /* global tone mapping */
 typedef struct
@@ -1087,6 +1098,7 @@ AW_S32 AW_MPI_ISP_Init();
 AW_S32 AW_MPI_ISP_Run(ISP_DEV IspDev); // [0, 1]
 AW_S32 AW_MPI_ISP_Stop(ISP_DEV IspDev);
 AW_S32 AW_MPI_ISP_Exit();
+AW_S32 AW_MPI_ISP_ReqStats(ISP_DEV IspDev, ISP_STATS_CONTEXT_S *pStats);
 
 // CFG ISP IP On or Off
 AW_S32 AW_MPI_ISP_SetModuleOnOff(ISP_DEV IspDev, ISP_MODULE_ONOFF *pstIspModuleOnOff);
@@ -1095,40 +1107,60 @@ AW_S32 AW_MPI_ISP_GetModuleOnOff(ISP_DEV IspDev, ISP_MODULE_ONOFF *pstIspModuleO
 //set cfg
 AW_S32 AW_MPI_ISP_GetAe(ISP_DEV IspDev, ISP_AE_S *pAe);
 AW_S32 AW_MPI_ISP_SetAe(ISP_DEV IspDev, ISP_AE_S *pAe);
+AW_S32 AW_MPI_ISP_GetAeTablePreview(ISP_DEV IspDev, ISP_AE_TABLE_S *pAeTable);
+AW_S32 AW_MPI_ISP_SetAeTablePreview(ISP_DEV IspDev, ISP_AE_TABLE_S *pAeTable);
+AW_S32 AW_MPI_ISP_GetAeMinMaxExp(ISP_DEV IspDev, unsigned int *MinExp, unsigned int *MaxExp);  /*MinExp MaxExp units : us*; default value[125us~33333us]*/
+AW_S32 AW_MPI_ISP_SetAeMinMaxExp(ISP_DEV IspDev, unsigned int MinExp, unsigned int MaxExp);
+
 
 // ======================
 // IOCTL ISP
 AW_S32 AW_MPI_ISP_AE_SetMode(ISP_DEV IspDev, int Value);			// [0:auto, 1:manual]
 AW_S32 AW_MPI_ISP_AE_SetExposureBias(ISP_DEV IspDev, int Value);	// [1, 8]
-AW_S32 AW_MPI_ISP_AE_SetExposure(ISP_DEV IspDev, int Value);		// [0, 65535*16]	
+AW_S32 AW_MPI_ISP_AE_SetExposure(ISP_DEV IspDev, int Value);		// [0, 65535*16]
+AW_S32 AW_MPI_ISP_AE_SetExposureMs(ISP_DEV IspDev, int Value);      //exp time(ms)
+AW_S32 AW_MPI_ISP_AE_SetISOSensitiveMode(ISP_DEV IspDev, int Mode); // [0:manual, 1:auto]
+AW_S32 AW_MPI_ISP_AE_SetISOSensitive(ISP_DEV IspDev, int Value); // [0~7]->[auto,100,200,400,800,1600,3200,6400]
+AW_S32 AW_MPI_ISP_AE_SetMetering(ISP_DEV IspDev, int Value);        // [0:average,1:center,2:spot,3:matrix]
 AW_S32 AW_MPI_ISP_AE_SetGain(ISP_DEV IspDev, int Value);			// [0, 65535]
+AW_S32 AW_MPI_ISP_AE_SetWeightAttr(ISP_DEV IspDev, ISP_AE_WEIGHT_S *pWeight);
 AW_S32 AW_MPI_ISP_AWB_SetMode(ISP_DEV IspDev, int Value);		// [0:auto, 1:manual]
 AW_S32 AW_MPI_ISP_AWB_SetColorTemp(ISP_DEV IspDev, int Value); // [2, 9]
-AW_S32 AW_MPI_ISP_AWB_SetISOSensitiveMode(ISP_DEV IspDev, int Mode); // [0:manual, 1:auto]
-AW_S32 AW_MPI_ISP_AWB_SetISOSensitive(ISP_DEV IspDev, int Value); // [0~7]->[auto,100,200,400,800,1600,3200,6400]
-AW_S32 AW_MPI_ISP_AWB_SetRGain(ISP_DEV IspDev, int Value);		// [0, 4095]
-AW_S32 AW_MPI_ISP_AWB_SetBGain(ISP_DEV IspDev, int Value);		// [0, 4095]
+AW_S32 AW_MPI_ISP_AWB_SetRGain(ISP_DEV IspDev, int Value);		// [256, 256 * 64]
+AW_S32 AW_MPI_ISP_AWB_SetBGain(ISP_DEV IspDev, int Value);		// [256, 256 * 64]
+AW_S32 AW_MPI_ISP_AWB_SetGrGain(ISP_DEV IspDev, int Value);		// [256, 256 * 64]
+AW_S32 AW_MPI_ISP_AWB_SetGbGain(ISP_DEV IspDev, int Value);		// [256, 256 * 64]
 AW_S32 AW_MPI_ISP_SetFlicker(ISP_DEV IspDev, int Value); 				// [0:disable,1:50,2:60,3:auto]
 AW_S32 AW_MPI_ISP_SetBrightness(ISP_DEV IspDev, int Value); 		//[-126, 126]
 AW_S32 AW_MPI_ISP_SetContrast(ISP_DEV IspDev, int Value);   			// [-126, 126]
 AW_S32 AW_MPI_ISP_SetSaturation(ISP_DEV IspDev, int Value); 			// [-256, 512]
 AW_S32 AW_MPI_ISP_SetSharpness(ISP_DEV IspDev, int Value); 		// [0, 10]
+AW_S32 AW_MPI_ISP_SetHue(ISP_DEV IspDev, int Value); 		// [-180, 180]
+AW_S32 AW_MPI_ISP_SetGainCfg(ISP_DEV IspDev, struct gain_cfg *pstGainCfg);
+AW_S32 AW_MPI_ISP_SetSensorFps(ISP_DEV IspDev, int iVal);  //frame interval:[30=1/30S],[-20=20S]
 
 AW_S32 AW_MPI_ISP_AE_GetMode(ISP_DEV IspDev, int *Value);
 AW_S32 AW_MPI_ISP_AE_GetExposureBias(ISP_DEV IspDev, int *Value);
 AW_S32 AW_MPI_ISP_AE_GetExposure(ISP_DEV IspDev, int *Value);
+AW_S32 AW_MPI_ISP_AE_GetExposureMs(ISP_DEV IspDev, int *Value);      //exp time(ms)
+AW_S32 AW_MPI_ISP_AE_GetISOSensitiveMode(ISP_DEV IspDev, int *Mode); // [0:manual, 1:auto]
+AW_S32 AW_MPI_ISP_AE_GetISOSensitive(ISP_DEV IspDev, int *Value); // [0~7]->[auto,100,200,400,800,1600,3200,6400]
+AW_S32 AW_MPI_ISP_AE_GetMetering(ISP_DEV IspDev, int *Value); // [0:average,1:center,2:spot,3:matrix]
 AW_S32 AW_MPI_ISP_AE_GetGain(ISP_DEV IspDev, int *Value);
+AW_S32 AW_MPI_ISP_AE_GetWeightAttr(ISP_DEV IspDev, ISP_AE_WEIGHT_S *pWeight);
 AW_S32 AW_MPI_ISP_AWB_GetMode(ISP_DEV IspDev, int *Value);
 AW_S32 AW_MPI_ISP_AWB_GetColorTemp(ISP_DEV IspDev, int *Value);
-AW_S32 AW_MPI_ISP_AWB_GetISOSensitiveMode(ISP_DEV IspDev, int *Mode); // [0:manual, 1:auto]
-AW_S32 AW_MPI_ISP_AWB_GetISOSensitive(ISP_DEV IspDev, int *Value); // [0~7]->[auto,100,200,400,800,1600,3200,6400]
 AW_S32 AW_MPI_ISP_AWB_GetRGain(ISP_DEV IspDev, int *Value);
 AW_S32 AW_MPI_ISP_AWB_GetBGain(ISP_DEV IspDev, int *Value);
+AW_S32 AW_MPI_ISP_AWB_GetGrGain(ISP_DEV IspDev, int *Value);
+AW_S32 AW_MPI_ISP_AWB_GetGbGain(ISP_DEV IspDev, int *Value);
 AW_S32 AW_MPI_ISP_GetFlicker(ISP_DEV IspDev, int *Value);
 AW_S32 AW_MPI_ISP_GetBrightness(ISP_DEV IspDev, int *Value);
 AW_S32 AW_MPI_ISP_GetContrast(ISP_DEV IspDev, int *Value);
 AW_S32 AW_MPI_ISP_GetSaturation(ISP_DEV IspDev, int *Value);
 AW_S32 AW_MPI_ISP_GetSharpness(ISP_DEV IspDev, int *Value);
+AW_S32 AW_MPI_ISP_GetHue(ISP_DEV IspDev, int *Value);
+AW_S32 AW_MPI_ISP_GetGainCfg(ISP_DEV IspDev, struct gain_cfg *pstGainCfg);
 
 AW_S32 AW_MPI_ISP_SetPltmWDR(ISP_DEV IspDev, int Value); 	// [0, 255]
 AW_S32 AW_MPI_ISP_GetPltmWDR(ISP_DEV IspDev, int *Value); // [0, 255]
@@ -1136,6 +1168,11 @@ AW_S32 AW_MPI_ISP_SetNRAttr(ISP_DEV IspDev,  int Value);		// [0, 100]
 AW_S32 AW_MPI_ISP_GetNRAttr(ISP_DEV IspDev, int *Value);		// [0, 100]
 AW_S32 AW_MPI_ISP_Set3NRAttr(ISP_DEV IspDev,int Value);		// [0, 100]
 AW_S32 AW_MPI_ISP_Get3NRAttr(ISP_DEV IspDev, int *Value);	// [0, 100]
+AW_S32 AW_MPI_ISP_GetIspDigGain(ISP_DEV IspDev, int *Value);
+AW_S32 AW_MPI_ISP_SetHighLT(ISP_DEV IspDev,int Value);     /* value: [-32, 32]*/
+AW_S32 AW_MPI_ISP_GetHighLT(ISP_DEV IspDev, int *Value);
+AW_S32 AW_MPI_ISP_SetBackLT(ISP_DEV IspDev,int Value);    /* value: [-32, 32]*/
+AW_S32 AW_MPI_ISP_GetBackLT(ISP_DEV IspDev, int *Value);
 
 AW_S32 AW_MPI_ISP_SetSaveCTX(ISP_DEV IspDev);
 

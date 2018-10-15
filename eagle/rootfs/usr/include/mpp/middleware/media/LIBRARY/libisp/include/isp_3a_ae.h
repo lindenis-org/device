@@ -17,7 +17,6 @@
 
 #ifndef _ISP_3A_AE_H_
 #define _ISP_3A_AE_H_
-#include "isp_comm.h"
 
 /* AE */
 #define AE_WIN_NUM_DEF	(48*32)
@@ -33,9 +32,9 @@
  */
 enum ae_metering_mode {
 	AE_METERING_MODE_AVERAGE = 0,
-	AE_METERING_MODE_SPOT	= 1,
-	AE_METERING_MODE_MATRIX	= 2,
-	AE_METERING_MODE_CENTER	= 3
+	AE_METERING_MODE_CENTER = 1,
+	AE_METERING_MODE_SPOT = 2,
+	AE_METERING_MODE_MATRIX	= 3,
 };
 
 enum exposure_mode {
@@ -173,6 +172,8 @@ typedef struct isp_ae_ini_cfg {
 	HW_S32 ae_iso2gain_ratio;
 	HW_S32 ae_fno_step[AE_FNO_STEP];
 	HW_S32 wdr_cfg[ISP_WDR_CFG_MAX];
+	HW_S32 ae_gain_favor;
+	HW_S32 ae_gain_range[4];
 	struct ae_table_info ae_tbl_scene[SCENE_MODE_MAX];
 }ae_ini_cfg_t;
 

@@ -16,6 +16,8 @@
 #include "mm_comm_vi.h"
 #include <mm_comm_region.h>
 
+#include "isp_manage.h"
+
 #include <OsdGroups.h>
 #include "anti-shake.h"
 
@@ -67,6 +69,7 @@ typedef struct {
 
     //for osd reconstruct
     OsdGroups *mpOsdGroups;
+    RGN_FLIP_FLAG_E mRgnFlipFlag;
 
     // for video stabilization
     int mEnableVideoStabilization; // 0:disable, 1:enable
@@ -88,6 +91,7 @@ typedef struct VIDevManager
     BOOL                        mSetFrequency; //TRUE:had set .  FALSE: ready to set.
     unsigned int                mClockFrequency; //
 }VIDevManager;
+
 //extern struct hw_isp_media_dev *media;
 
 ERRORTYPE videoInputHw_Construct(int vipp_id);
@@ -102,6 +106,7 @@ void videoInputHw_CHN_MAP_S_Destruct(VI_CHN_MAP_S *pChannel);
 ERRORTYPE videoInputHw_initVipp(VI_DEV Vipp_id);
 ERRORTYPE videoInputHw_setVippEnable(VI_DEV Vipp_id);
 ERRORTYPE videoInputHw_setVippDisable(VI_DEV Vipp_id);
+ERRORTYPE videoInputHw_SetVippShutterTime(VI_DEV Vipp_id, VI_SHUTTIME_CFG_S *pShutTime);
 ERRORTYPE videoInputHw_searchVippStatus(VI_DEV Vipp_id, int *pStatus);
 
 ERRORTYPE videoInputHw_Open_Media(); /*Open Media+ISP+CSI Device*/
@@ -115,6 +120,7 @@ ERRORTYPE videoInputHw_ChnEnable(int vipp_id); /*Enable /dev/video[0~3] node*/
 ERRORTYPE videoInputHw_ChnDisable(int vipp_id); /*Disable /dev/video[0~3] node*/
 //ERRORTYPE videoInputHw_SetOsdMaskRegion(int *pvipp_id, VI_OsdMaskRegion *pstOsdMaskRegion);
 //ERRORTYPE videoInputHw_UpdateOsdMaskRegion(int *pvipp_id, int onoff);
+ERRORTYPE videoInputHw_SetRegionFlipFlag(VI_DEV vipp_id, RGN_FLIP_FLAG_E FlipFlag);
 ERRORTYPE videoInputHw_SetRegion(VI_DEV vipp_id, RGN_HANDLE RgnHandle, RGN_ATTR_S *pRgnAttr, const RGN_CHN_ATTR_S *pRgnChnAttr, BITMAP_S *pBmp);
 ERRORTYPE videoInputHw_DeleteRegion(VI_DEV vipp_id, RGN_HANDLE RgnHandle);
 ERRORTYPE videoInputHw_UpdateOverlayBitmap(VI_DEV vipp_id, RGN_HANDLE RgnHandle, BITMAP_S *pBitmap);
@@ -126,11 +132,13 @@ ERRORTYPE videoInputHw_GetFrameSyncStart(int *pvipp_id, int *pExpTime, int *pFra
 ERRORTYPE videoInputHw_IspAe_SetMode(int *pvipp_id, int value);
 ERRORTYPE videoInputHw_IspAe_SetExposureBias(int *pvipp_id, int value);
 ERRORTYPE videoInputHw_IspAe_SetExposure(int *pvipp_id, int value);
+ERRORTYPE videoInputHw_IspAe_SetExposureMs(int *pvipp_id, int value);
+ERRORTYPE videoInputHw_IspAe_SetISOSensitiveMode(int *pvipp_id, int mode);
+ERRORTYPE videoInputHw_IspAe_SetISOSensitive(int *pvipp_id, int value);
+ERRORTYPE videoInputHw_IspAe_SetMetering(int *pvipp_id, int value);
 ERRORTYPE videoInputHw_IspAe_SetGain(int *pvipp_id, int value);
 ERRORTYPE videoInputHw_IspAwb_SetMode(int *pvipp_id, int value);
 ERRORTYPE videoInputHw_IspAwb_SetColorTemp(int *pvipp_id, int value);
-ERRORTYPE videoInputHw_IspAwb_SetISOSensitiveMode(int *pvipp_id, int mode);
-ERRORTYPE videoInputHw_IspAwb_SetISOSensitive(int *pvipp_id, int value);
 ERRORTYPE videoInputHw_Isp_SetFlicker(int *pvipp_id, int value);
 ERRORTYPE videoInputHw_Isp_SetMirror(int *pvipp_id, int value);
 ERRORTYPE videoInputHw_Isp_SetFlip(int *pvipp_id, int value);
@@ -139,15 +147,19 @@ ERRORTYPE videoInputHw_Isp_SetContrast(int *pvipp_id, int value);
 ERRORTYPE videoInputHw_Isp_SetSaturation(int *pvipp_id, int value);
 ERRORTYPE videoInputHw_Isp_SetSharpness(int *pvipp_id, int value);
 ERRORTYPE videoInputHw_Isp_SetHue(int *pvipp_id, int value);
+ERRORTYPE videoInputHw_Isp_SetGainCfg(int *pvipp_id, struct gain_cfg *pstGainCfg);
+ERRORTYPE videoInputHw_Isp_SetSensorFps(int *pvipp_id, int iVal);
 
 ERRORTYPE videoInputHw_IspAe_GetMode(int *pvipp_id, int *pvalue);
 ERRORTYPE videoInputHw_IspAe_GetExposureBias(int *pvipp_id, int *pvalue);
 ERRORTYPE videoInputHw_IspAe_GetExposure(int *pvipp_id, int *pvalue);
+ERRORTYPE videoInputHw_IspAe_GetExposureMs(int *pvipp_id, int *pvalue);
+ERRORTYPE videoInputHw_IspAe_GetISOSensitiveMode(int *pvipp_id, int *mode);
+ERRORTYPE videoInputHw_IspAe_GetISOSensitive(int *pvipp_id, int *value);
+ERRORTYPE videoInputHw_IspAe_GetMetering(int *pvipp_id, int *pvalue);
 ERRORTYPE videoInputHw_IspAe_GetGain(int *pvipp_id, int *pvalue);
 ERRORTYPE videoInputHw_IspAwb_GetMode(int *pvipp_id, int *pvalue);
 ERRORTYPE videoInputHw_IspAwb_GetColorTemp(int *pvipp_id, int *pvalue);
-ERRORTYPE videoInputHw_IspAwb_GetISOSensitiveMode(int *pvipp_id, int *mode);
-ERRORTYPE videoInputHw_IspAwb_GetISOSensitive(int *pvipp_id, int *value);
 ERRORTYPE videoInputHw_Isp_GetFlicker(int *pvipp_id, int *pvalue);
 ERRORTYPE videoInputHw_Isp_GetMirror(int *pvipp_id, int *pvalue);
 ERRORTYPE videoInputHw_Isp_GetFlip(int *pvipp_id, int *pvalue);
@@ -156,6 +168,19 @@ ERRORTYPE videoInputHw_Isp_GetContrast(int *pvipp_id, int *pvalue);
 ERRORTYPE videoInputHw_Isp_GetSaturation(int *pvipp_id, int *pvalue);
 ERRORTYPE videoInputHw_Isp_GetSharpness(int *pvipp_id, int *pvalue);
 ERRORTYPE videoInputHw_Isp_GetHue(int *pvipp_id, int *pvalue);
+ERRORTYPE videoInputHw_Isp_GetGainCfg(int *pvipp_id, struct gain_cfg *pstGainCfg);
+ERRORTYPE videoInputHw_Isp_SetHighLT(int *pvipp_id, int value);/* value: [-32, 32]*/
+ERRORTYPE videoInputHw_Isp_GetHighLT(int *pvipp_id, int *value);
+ERRORTYPE videoInputHw_Isp_SetBackLT(int *pvipp_id, int value);/* value: [-32, 32]*/
+ERRORTYPE videoInputHw_Isp_GetBackLT(int *pvipp_id, int *value);
+ERRORTYPE videoInputHw_IspAwb_SetRGain(int *pvipp_id, int value);  /*value: [256, 256 * 64]*/
+ERRORTYPE videoInputHw_IspAwb_GetRGain(int *pvipp_id, int *value);
+ERRORTYPE videoInputHw_IspAwb_SetBGain(int *pvipp_id, int value);  /*value: [256, 256 * 64]*/
+ERRORTYPE videoInputHw_IspAwb_GetBGain(int *pvipp_id, int *value);
+ERRORTYPE videoInputHw_IspAwb_SetGrGain(int *pvipp_id, int value);  /*value: [256, 256 * 64]*/
+ERRORTYPE videoInputHw_IspAwb_GetGrGain(int *pvipp_id, int *value);
+ERRORTYPE videoInputHw_IspAwb_SetGbGain(int *pvipp_id, int value);  /*value: [256, 256 * 64]*/
+ERRORTYPE videoInputHw_IspAwb_GetGbGain(int *pvipp_id, int *value);
 
 ERRORTYPE videoInputHw_Isp_SetWDR(int *pvipp_id, int value);
 ERRORTYPE videoInputHw_Isp_GetWDR(int *pvipp_id, int *value);
@@ -163,5 +188,6 @@ ERRORTYPE videoInputHw_Isp_SetNR(int *pvipp_id, int value);
 ERRORTYPE videoInputHw_Isp_GetNR(int *pvipp_id, int *value);
 ERRORTYPE videoInputHw_Isp_Set3DNR(int *pvipp_id, int value);
 ERRORTYPE videoInputHw_Isp_Get3DNR(int *pvipp_id, int *value);
+ERRORTYPE videoInputHw_Isp_GetIspDigGain(int *pvipp_id, int *value);
 
 #endif

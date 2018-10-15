@@ -145,6 +145,7 @@ typedef struct VIDEOENCDATATYPE {
     VENC_PARAM_INTRA_REFRESH_S mEncIntraRefreshParam;
     VENC_COLOR2GREY_S   mColor2GreyParam;
     int    m3DNRFlag;   //3dfilter:[0, 6], 0(close, default), recommend:3, strongest: 6
+    VENC_SUPERFRAME_CFG_S mSuperFrmParam;
     BOOL    mHorizonFlipFlag;//
     BOOL    mAdaptiveIntraInPFlag;//
 
@@ -159,6 +160,7 @@ typedef struct VIDEOENCDATATYPE {
     VENC_RC_PARAM_S mRcParam;
     VENC_CROP_CFG_S mCropCfg;
     VeProcSet mProcSet;
+    VencSaveBSFile mSaveBSFile;
 
     int mOutputFrameNotifyPipeFds[2];
 

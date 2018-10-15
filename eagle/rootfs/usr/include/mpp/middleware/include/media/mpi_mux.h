@@ -26,6 +26,8 @@
 //media internal common headers.
 #include <vencoder.h>
 #include <ComponentCommon.h>
+#include <RecorderMode.h>
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -54,6 +56,9 @@ ERRORTYPE AW_MPI_MUX_SwitchFd(MUX_GRP muxGrp, MUX_CHN muxChn, int fd, int nFallo
 ERRORTYPE AW_MPI_MUX_SwitchFileNormal(MUX_GRP muxGrp, MUX_CHN muxChn);
 ERRORTYPE AW_MPI_MUX_RegisterCallback(MUX_GRP muxGrp, MPPCallbackInfo *pCallback);
 ERRORTYPE AW_MPI_MUX_GetCacheStatus(MUX_GRP muxGrp, CacheState *pCacheState);
+ERRORTYPE AW_MPI_MUX_SetSwitchFileDurationPolicy(MUX_GRP muxGrp, MUX_CHN muxChn, RecordFileDurationPolicy *pPolicy);
+ERRORTYPE AW_MPI_MUX_GetSwitchFileDurationPolicy(MUX_GRP muxGrp, MUX_CHN muxChn, RecordFileDurationPolicy *pPolicy);
+
 
 
 #ifdef __cplusplus

@@ -87,6 +87,8 @@ typedef enum CompInternalMsgType {
     DemuxComp_VideoBufferAvailable = 0x1100,
     DemuxComp_AudioBufferAvailable,
     DemuxComp_SubtitleBufferAvailable,
+
+    UvcComp_InputFrameAvailable,
 } CompInternalMsgType;
 
 typedef enum CDX_COMP_PRIV_FLAGS {

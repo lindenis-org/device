@@ -30,6 +30,7 @@ typedef struct VdecInputStream
 typedef struct VdecOutFrame
 {
     VIDEO_FRAME_INFO_S *pFrameInfo;
+    VIDEO_FRAME_INFO_S *pSubFrameInfo;
     int nMilliSec;
 }VdecOutFrame;
 

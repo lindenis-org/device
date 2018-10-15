@@ -98,5 +98,7 @@ int isp_sensor_set_exp_gain(struct hw_isp_device *isp, struct sensor_exp_gain *e
 int isp_sensor_set_fps(struct hw_isp_device *isp, struct sensor_fps *fps);
 int isp_sensor_get_temp(struct hw_isp_device *isp, struct sensor_temp *temp);
 
+int isp_act_init_range(struct hw_isp_device *isp, unsigned int min, unsigned int max);
+int isp_act_set_pos(struct hw_isp_device *isp, unsigned int pos);
 #endif /*_HWISP_H_*/
 

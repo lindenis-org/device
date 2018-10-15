@@ -147,6 +147,7 @@ ERRORTYPE audioHw_AO_DrainPcmRingBuf(AUDIO_DEV AudioDevId);
 ERRORTYPE audioHw_AO_FeedPcmData(AUDIO_DEV AudioDevId, AUDIO_FRAME_S *pFrm);
 ERRORTYPE audioHw_AO_GetPcmConfig(AUDIO_DEV AudioDevId, PCM_CONFIG_S **ppCfg);
 ERRORTYPE audioHw_AO_GetAIOAttr(AUDIO_DEV AudioDevId, AIO_ATTR_S **ppAttr);
+BOOL audioHw_AO_IsDevConfigured(AUDIO_DEV AudioDevId);
 BOOL audioHw_AO_IsDevStarted(AUDIO_DEV AudioDevId);
 
 #endif /* __AUDIO_HW_H__ */

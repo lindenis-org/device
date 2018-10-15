@@ -77,7 +77,8 @@ ERRORTYPE VideoDecGetProtocolParam(
  */
 ERRORTYPE VideoDecGetFrame(
         PARAM_IN COMP_HANDLETYPE hComponent, 
-        PARAM_OUT VIDEO_FRAME_INFO_S *pFrameInfo, 
+        PARAM_OUT VIDEO_FRAME_INFO_S *pFrameInfo,
+        PARAM_OUT VIDEO_FRAME_INFO_S *pSubFrameInfo,
         PARAM_IN int nMilliSec);
 ERRORTYPE VideoDecGetRotate(
         PARAM_IN COMP_HANDLETYPE hComponent, 
@@ -125,7 +126,8 @@ ERRORTYPE VideoDecSetProtocolParam(
  */
 ERRORTYPE VideoDecReleaseFrame(
         PARAM_IN COMP_HANDLETYPE hComponent,
-        PARAM_IN VIDEO_FRAME_INFO_S *pFrameInfo);
+        PARAM_IN VIDEO_FRAME_INFO_S *pFrameInfo,
+        PARAM_IN VIDEO_FRAME_INFO_S *pSubFrameInfo);
 ERRORTYPE VideoDecSetFrameBuffersToVdecLib(
         PARAM_IN COMP_HANDLETYPE hComponent, 
         PARAM_IN VDecCompFrameBuffersParam *pParam);

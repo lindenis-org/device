@@ -116,7 +116,7 @@ typedef struct RecSink
     int64_t             mBasePts[MAX_TRACK_COUNT];  //first source pts from encoder. clear when switch fd, unit:us
     int64_t             mInputPrevPts[MAX_TRACK_COUNT];  //record input previous frame source pts, unit:us
     int64_t             mOrigBasePts[MAX_TRACK_COUNT];  //first source pts. Keep valid during recSink Record, not clear when switch fd. for future, not use now. unit:us
-    int64_t             mDebugInputPts[MAX_TRACK_COUNT];    //for debug, unit:us
+    int64_t             mDebugInputPts[MAX_TRACK_COUNT];    //for debug, source pts, unit:us
 
     pthread_mutex_t     mutex_reset_writer_lock;    //lock nSwitchFd(mSwitchFilePath), reset_fd_flag, mbMuxerInit, rec_file, nOutputFd(mPath), pWriter, pMuxerCtx
     int                 nSwitchFd;  //need dup fd.
@@ -136,6 +136,7 @@ typedef struct RecSink
     int64_t             mMaxFileSizeBytes;  //unit:byte
 
     RECORDER_MODE       mRecordMode;
+    RecordFileDurationPolicy mFileDurationPolicy;
     FSWRITEMODE         mFsWriteMode;
     int             mFsSimpleCacheSize;
     _media_file_inf_t   *mpMediaInf;    //RECRENDERDATATYPE->media_inf
@@ -194,6 +195,10 @@ typedef struct RecSink
         PARAM_IN COMP_HANDLETYPE hComponent,
         PARAM_IN int64_t nDuration);
 
+    ERRORTYPE (*SetFileDurationPolicy)(
+        PARAM_IN COMP_HANDLETYPE hComponent,
+        PARAM_IN RecordFileDurationPolicy nPolicy);
+    
     ERRORTYPE (*SetMaxFileSize)(
         PARAM_IN COMP_HANDLETYPE hComponent,
         PARAM_IN int64_t nSize);

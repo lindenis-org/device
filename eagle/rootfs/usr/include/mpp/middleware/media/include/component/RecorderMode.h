@@ -33,6 +33,12 @@ typedef enum {
 	RECORDER_MODE_CAMERA	= (RECORDER_MODE_AUDIO | RECORDER_MODE_VIDEO),		// audio and video recorder
 }RECORDER_MODE;
 
+typedef enum {
+    RecordFileDurationPolicy_MinDuration        = 0,    //file duration must large than minDuration. guarantee next frame is I frame.
+    RecordFileDurationPolicy_AverageDuration,           //take user value as average file duration. guarantee next frame is I frame.
+    RecordFileDurationPolicy_AccurateDuration,          //immediately finish current file. not guarantee next frame is I frame.
+}RecordFileDurationPolicy;
+
 typedef struct CdxOutputSinkInfo
 {
     int                 mMuxerId;

@@ -39,7 +39,6 @@
 #include "isp_rolloff.h"
 #include "isp_pltm.h"
 
-#include "../include/platform.h"
 #include "../isp_tuning/isp_tuning_priv.h"
 
 extern unsigned int isp_lib_log_param;
@@ -270,7 +269,6 @@ typedef struct isp_af_settings {
 	enum auto_focus_range_new af_range;
 	bool focus_lock;
 	struct isp_h3a_coor_win af_coor;
-	HW_U32 af_interval_frame;
 } isp_af_settings_t;
 
 /*
@@ -300,7 +298,13 @@ struct isp_stats_context {
 	struct isp_wb_gain wb_gain_saved;
 	bool enabled;
 };
-
+struct gain_cfg {
+	HW_S32 gain_favor;
+	HW_S32 ana_gain_min;
+	HW_S32 ana_gain_max;
+	HW_S32 dig_gain_min;
+	HW_S32 dig_gain_max;
+};
 typedef struct isp_tune_setting {
 	HW_S32 contrast_level;
 	HW_S32 saturation_level;
@@ -311,6 +315,9 @@ typedef struct isp_tune_setting {
 	HW_S32 hue_level;
 	HW_S32 pltmwdr_level;
 	HW_S32 tdf_level;
+	HW_S32 highlight_level;
+	HW_S32 backlight_level;
+	struct gain_cfg gains;
 } isp_tune_setting_t;
 
 typedef struct isp_adjust_setting {
@@ -411,10 +418,7 @@ enum e3a_settings_flags {
 	ISP_SET_AE_METERING_MODE = 1 << 8,
 	ISP_SET_CONTRAST = 1 << 9,
 	ISP_SET_HUE = 1 << 10,
-	ISP_SET_CEM_RATIO = 1 << 11,
-	ISP_SET_PLTMWDR_STR = 1 << 12,
-	ISP_SET_TDF_STR = 1 << 13,
-	ISP_SET_DENOISE_STR = 1 << 14,
+	ISP_SET_GAIN_STR = 1 << 11,
 	ISP_SETTING_MAX,
 
 	/* all possible flags raised */

@@ -59,6 +59,10 @@ typedef struct VDEC_CHN_ATTR_S {
     unsigned int mPicHeight; /* max pic height */
     ROTATE_E mInitRotation;  //clockwise rotation: val=0 no rotation, val=1 90 degree; val=2 180 degree, val=3 270 degree
     PIXEL_FORMAT_E mOutputPixelFormat;
+    BOOL mSubPicEnable;        //support second picture flag, now just for mjpeg,20180103 
+    unsigned int mSubPicWidthRatio; // val = 0 : 1; 1 : 1/2; 2 : 1/4; 3 : 1/8; 4 : 1/16 
+    unsigned int mSubPicHeightRatio;//[0 4],
+    PIXEL_FORMAT_E mSubOutputPixelFormat; //sub channel output  pixelformat
     union {
         VDEC_ATTR_JPEG_S mVdecJpegAttr;   /* structure with jpeg or mjpeg type  */
         VDEC_ATTR_VIDEO_S mVdecVideoAttr; /* structure with video ( h264/mpeg4) */

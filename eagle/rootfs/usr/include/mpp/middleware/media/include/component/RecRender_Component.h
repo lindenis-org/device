@@ -109,6 +109,8 @@ typedef struct RECRENDERDATATYPE {
     int64_t impact_aftime;
     RsPacketCacheManager *cache_manager;
 
+    RecordFileDurationPolicy mRecordFileDurationPolicy;
+
     //FSWRITEMODE         mFsWriteMode;
     //int             mSimpleCacheSize;
 

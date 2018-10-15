@@ -96,11 +96,11 @@ typedef struct AI_CHN_DATA_S {
     volatile BOOL mWaitingCapDataFlag;
     volatile BOOL mWaitingPlayDataFlag;
 
-    volatile BOOL mWaitingOutFrameFlag;
+    //volatile BOOL mWaitingOutFrameFlag;
     cdx_sem_t mWaitOutFrameSem; //for non-tunnel mode, wait outFrame coming!
 
     //volatile BOOL mWaitGetAllOutFrameFlag;
-    cdx_sem_t mWaitGetAllOutFrameSem; //for non-tunnel mode, wait user get all outFrame!
+    //cdx_sem_t mWaitGetAllOutFrameSem; //for non-tunnel mode, wait user get all outFrame!
 
     FILE *pcm_fp;
     int pcm_sz;

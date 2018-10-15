@@ -3,8 +3,6 @@
 #define _ISP_PLTM_H_
 
 typedef struct isp_pltm_ini_cfg {
-	HW_S16 pow_tab_base[256];
-	HW_S16 f_tab_base[256];
 	HW_S32 pltm_cfg[ISP_PLTM_MAX];
 	HW_S32 pltm_dynamic_cfg[ISP_PLTM_DYNAMIC_MAX];
 }pltm_ini_cfg_t;
@@ -28,7 +26,7 @@ typedef struct isp_pltm_param {
 		HW_BOOL pltm_enable;
 		pltm_ini_cfg_t pltm_ini;
 		isp_sensor_info_t sensor_info;
-		unsigned char *pltm_tbl; // for hardware
+		HW_U16 *pltm_tbl;
 	} u;
 } pltm_param_t;
 

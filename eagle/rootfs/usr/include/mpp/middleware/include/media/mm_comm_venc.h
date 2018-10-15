@@ -25,7 +25,6 @@ extern "C"{
 #include "mm_comm_video.h"
 #include "mm_comm_rc.h"
 
-
 /* invlalid channel ID */
 #define ERR_VENC_INVALID_CHNID     DEF_ERR(MOD_ID_VENC, EN_ERR_LEVEL_ERROR, EN_ERR_INVALID_CHNID)
 /* at lease one parameter is illagal ,eg, an illegal enumeration value  */
@@ -232,6 +231,24 @@ typedef struct VENC_STREAM_S
     };
 }VENC_STREAM_S;
 
+typedef enum H264_LEVEL_E {
+    H264_LEVEL_1   = 10,     /**< Level 1 */
+    H264_LEVEL_11  = 11,     /**< Level 1.1 */
+    H264_LEVEL_12  = 12,     /**< Level 1.2 */
+    H264_LEVEL_13  = 13,     /**< Level 1.3 */
+    H264_LEVEL_2   = 20,     /**< Level 2 */
+    H264_LEVEL_21  = 21,     /**< Level 2.1 */
+    H264_LEVEL_22  = 22,     /**< Level 2.2 */
+    H264_LEVEL_3   = 30,     /**< Level 3 */
+    H264_LEVEL_31  = 31,     /**< Level 3.1 */
+    H264_LEVEL_32  = 32,     /**< Level 3.2 */
+    H264_LEVEL_4   = 40,     /**< Level 4 */
+    H264_LEVEL_41  = 41,     /**< Level 4.1 */
+    H264_LEVEL_42  = 42,     /**< Level 4.2 */
+    H264_LEVEL_5   = 50,     /**< Level 5 */
+    H264_LEVEL_51  = 51,     /**< Level 5.1 */
+}H264_LEVEL_E;
+
 typedef struct VENC_ATTR_H264_S
 {
     unsigned int  MaxPicWidth;                         /*maximum width of a picture to be encoded, in pixel*/
@@ -249,11 +266,27 @@ typedef struct VENC_ATTR_H264_S
     unsigned int  RefNum;                              /* 0: default; number of refrence frame*/
 
     //BOOL mbLongTermRef; //enable long term reference IDR Frame 
+    H264_LEVEL_E mLevel;   //VENC_H264LEVELTYPE
     BOOL FastEncFlag;   //for fast video encoder
     int IQpOffset;  //IQp offset value to offset I frame Qp to decrease I frame size.
     //int mVirtualIFrameInterval; /* (5, IDR_frame_interval), dynamic param */
     BOOL mbPIntraEnable;  //enalbe p frame intra
 }VENC_ATTR_H264_S;
+
+typedef enum H265_LEVEL_E {
+    H265_LEVEL_1   = 30,     /**< Level 1 */
+    H265_LEVEL_2  = 60,     /**< Level 2 */
+    H265_LEVEL_21  = 63,     /**< Level 2.1 */
+    H265_LEVEL_3  = 90,     /**< Level 3 */
+    H265_LEVEL_31   = 93,     /**< Level 3.1 */
+    H265_LEVEL_41  = 123,     /**< Level 4.1 */
+    H265_LEVEL_5  = 150,     /**< Level 5 */
+    H265_LEVEL_51   = 153,     /**< Level 5.1 */
+    H265_LEVEL_52  = 156,     /**< Level 5.2 */
+    H265_LEVEL_6  = 180,     /**< Level 6 */
+    H265_LEVEL_61   = 183,     /**< Level 6.1 */
+    H265_LEVEL_62  = 186     /**< Level 6.2 */
+}H265_LEVEL_E;
 
 typedef struct VENC_ATTR_H265_S
 {
@@ -272,6 +305,7 @@ typedef struct VENC_ATTR_H265_S
     unsigned int  mRefNum;                              /* 0: default; number of refrence frame*/
 
     //BOOL mbLongTermRef; //enable long term reference IDR Frame 
+    H265_LEVEL_E mLevel;   //VENC_H265LEVELTYPE
     BOOL mFastEncFlag;   //for fast video encoder
     int IQpOffset;  //IQp offset value to offset I frame Qp to decrease I frame size.
     //int mVirtualIFrameInterval;     /* (5, IDR_frame_interval), dynamic param */
@@ -367,7 +401,7 @@ typedef struct VENC_GOP_SMARTP_S
 	unsigned int   mBgInterval;
     int  mBgQpDelta;
 	int  mViQpDelta;									/**/
-    unsigned int mVirtualIInterval;
+    int  mVirtualIFrameInterval;
 }VENC_GOP_SMARTP_S;
 
 
@@ -388,7 +422,7 @@ typedef struct VENC_GOP_ATTR_S
         VENC_GOP_SMARTP_S   stSmartP;               /*attributes of Smart P*/
         VENC_GOP_BIPREDB_S  stBipredB;				/*attributes of b */
     };
-    
+    int mGopSize;
 }VENC_GOP_ATTR_S;
 
 

@@ -22,18 +22,6 @@
 #include "isp_comm.h"
 #include "isp_type.h"
 #include "isp_debug.h"
-#include "../include/platform.h"
-
-enum isp_test {
-	ISP_TEST_ALL_ENABLE = 0,
-	ISP_TEST_BAYER_GAINOFFSET = 1,
-	ISP_TEST_LENS = 2,
-	ISP_TEST_GAMMA = 3,
-	ISP_TEST_COLOR_MATRIX = 4,
-	ISP_TEST_COLOR = 5,
-	ISP_TEST_VCM_RANGE = 6,
-	ISP_TEST_MANUAL	= 7,
-};
 
 #define ISP_ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
 
@@ -45,13 +33,8 @@ enum isp_test {
 #define ISP_GAMMA_TBL_SIZE	256
 #define ISP_DRC_TBL_SIZE	256
 
-//sensor
-#define MAX_PIC_RESOLUTION_NUM	10
-
 /*
- *
  *  struct isp_drc_config - .
- *
  */
 struct isp_drc_config {
  	HW_U16 drc_table[ISP_DRC_TBL_SIZE];
@@ -59,18 +42,14 @@ struct isp_drc_config {
 };
 
 /*
- *
  *  struct isp_cem_config - .
- *
  */
 struct isp_cem_config {
  	HW_U8 cem_table[ISP_CEM_MEM_SIZE];
 };
 
 /*
- *
  *  struct isp_lut_lens_gamma_config - .
- *
  */
 
 struct isp_lut_config {
@@ -91,17 +70,14 @@ struct isp_gamma_config {
 };
 
 /*
- *
  *  struct isp_ae_config - .
- *
  */
 struct isp_ae_config {
 	struct isp_h3a_reg_win ae_reg_win;
 };
+
 /*
- *
  *  struct isp_af_config - .
- *
  */
 struct isp_af_config {
 	HW_U16 af_sap_lim;
@@ -109,9 +85,7 @@ struct isp_af_config {
 };
 
 /*
- *
  *  struct isp_awb_config - .
- *
  */
 struct isp_awb_config {
 	HW_U16 awb_r_sat_lim;
@@ -122,9 +96,7 @@ struct isp_awb_config {
 
 
 /*
- *
  *  struct isp_wb_gain_config - .
- *
  */
 struct isp_wb_gain_config {
 	HW_U32 clip_val;
@@ -133,9 +105,7 @@ struct isp_wb_gain_config {
 };
 
 /*
- *
  *  struct isp_hist_config - .
- *
  */
 struct isp_hist_config {
 	HW_S32 hist_threshold;
@@ -144,20 +114,15 @@ struct isp_hist_config {
 };
 
 /*
- *
  *  struct isp_afs_config - .
- *
  */
 struct isp_afs_config {
 	HW_U32 inc_line;
 };
 
 /*
- *
  *  struct isp_mode_config - .
- *
  */
-
 
 struct isp_mode_config {
 	unsigned int input_fmt;
@@ -173,11 +138,8 @@ struct isp_mode_config {
 	unsigned int dg_mode;
 };
 
-
 /*
- *
  *  struct isp_rgb2rgb_config - .
- *
  */
 struct isp_rgb2rgb_config {
 	 struct isp_rgb2rgb_gain_offset color_matrix_default;
@@ -185,9 +147,7 @@ struct isp_rgb2rgb_config {
 };
 
 /*
- *
  *  struct isp_gain_offset_config - .
- *
  */
 struct isp_gain_offset_config {
 	struct isp_offset offset;
@@ -205,9 +165,7 @@ struct isp_cnr_config {
 };
 
 /*
- *
  *  struct isp_module_config - .
- *
  */
 struct isp_module_config {
 	HW_U32 isp_dev_id;
@@ -235,6 +193,7 @@ struct isp_module_config {
 	struct isp_disc_config disc_cfg;
 
 	struct isp_rgb2rgb_config rgb2rgb_cfg;
+	struct isp_rgb2yuv_gain_offset rgb2yuv;
 	struct isp_ae_config ae_cfg;
 	struct isp_af_config af_cfg;
 	struct isp_awb_config awb_cfg;
@@ -250,7 +209,6 @@ struct isp_module_config {
 
 	enum   isp_output_speed output_speed;
 
-	struct isp_platform_drv *isp_drv;
 	//table addr
 	void *table_mapping1;
 	void *lens_table;
@@ -302,7 +260,6 @@ enum isp_features_flags {
 	ISP_FEATURES_All = (((ISP_FEATURES_MAX -1 ) << 1) -1 ),
 };
 
-void isp_hardware_platform_init(struct isp_module_config *module_cfg, int platform_id);
 void isp_hardware_update(struct isp_module_config *module_cfg);
 void isp_map_addr(struct isp_module_config *module_cfg, unsigned long vaddr);
 

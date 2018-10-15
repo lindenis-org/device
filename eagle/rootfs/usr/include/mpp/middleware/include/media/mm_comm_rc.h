@@ -66,6 +66,8 @@ typedef struct VENC_ATTR_H264_CBR_S
     unsigned int      fr32DstFrmRate ;                        /* the target frame rate of the venc chnnel */ 
     unsigned int      mBitRate;                             /* average bitrate */
     unsigned int      mFluctuateLevel;                      /* level [0..5].scope of bitrate fluctuate. 1-5: 10%-50%. 0: SDK optimized, recommended; */
+    unsigned int      mMaxQp;                               /* the max qp */
+    unsigned int      mMinQp;                               /* the min qp */
 } VENC_ATTR_H264_CBR_S;                                         
                                          
 typedef struct VENC_ATTR_H264_VBR_S
@@ -77,6 +79,8 @@ typedef struct VENC_ATTR_H264_VBR_S
     unsigned int      mMaxBitRate;                          /* the max bitrate */                      
     unsigned int      mMaxQp;                               /* the max qp */
     unsigned int      mMinQp;                               /* the min qp */
+    unsigned int      mRatioChangeQp;                       /* range[50,100], default:85 */
+    int               mQuality;                             /* range[1,13], 1:worst quality, 13:bestquality */
 }VENC_ATTR_H264_VBR_S;
 
 typedef struct VENC_ATTR_H264_ABR_S
@@ -85,11 +89,18 @@ typedef struct VENC_ATTR_H264_ABR_S
     unsigned int      mStatTime;                            /* the rate statistic time, the unit is senconds(s) */
     unsigned int      mSrcFrmRate;                          /* the input frame rate of the venc chnnel */
     unsigned int     fr32DstFrmRate ;                        /* the target frame rate of the venc chnnel */    
-    unsigned int      mAvgBitRate;                          /* average bitrate */
+    //unsigned int      mAvgBitRate;                          /* average bitrate */
     unsigned int      mMaxBitRate;                          /* the max bitrate */
-    unsigned int      mMinStaticPercent;                    /* the min bitrate ratio in static scene */
-    unsigned int      mMaxIQp;                              /* the max IQp */
-    unsigned int      mMinIQp;                              /* the min IQp */
+    unsigned int      mMinIprop;      //no support
+    unsigned int      mMaxIprop;      //no support
+    int               mMaxReEncodeTimes; //no support, default use one time
+    unsigned int      mRatioChangeQp;                       /* range[50,100], default:85 */
+    int               mQuality;                             //range[1,13], 1:worst quality, 13:best quality, recommend:8.
+    unsigned int      mMaxStaticIQp;  //no support
+    unsigned int      mMinIQp;                              /* I frame qp lower limit */
+    unsigned int      mMaxIQp;      //no support upper limit, I frame qp only use lower_limit(mMinIQp)
+    unsigned int      mMaxQp;                               /* the max qp */
+    unsigned int      mMinQp;                               /* the min qp */
 }VENC_ATTR_H264_ABR_S;
 
 typedef struct VENC_ATTR_H264_QPMAP_S
@@ -193,7 +204,6 @@ typedef struct VENC_RC_ATTR_S
         VENC_ATTR_H265_QPMAP_S  mAttrH265QpMap;
     };   
     void*       pRcAttr ;                            /*the rc attribute which could be specified by user*/
- 
 }VENC_RC_ATTR_S;
 
 typedef enum RC_SUPERFRM_MODE_E

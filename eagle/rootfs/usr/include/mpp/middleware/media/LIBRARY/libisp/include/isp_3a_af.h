@@ -145,6 +145,7 @@ typedef struct isp_af_stats {
 
 typedef struct isp_af_result {
 	enum auto_focus_status af_status_output;
+	HW_U32 last_code_output;
 	HW_U32 real_code_output;
 	HW_U32 std_code_output;
 	HW_U16 af_sap_lim_output;

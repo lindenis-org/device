@@ -149,12 +149,17 @@ typedef enum {
 
 typedef enum {
 	/*isp_ctrl*/
-	ISP_CTRL_MODULE_EN		= 0x0001,
+	ISP_CTRL_DIGITAL_GAIN		= 0x0001,
 	ISP_CTRL_PLTMWDR_STR		= 0x0002,
 	ISP_CTRL_DN_STR			= 0x0004,
 	ISP_CTRL_3DN_STR		= 0x0008,
+	ISP_CTRL_HIGH_LIGHT		= 0x0010,
+	ISP_CTRL_BACK_LIGHT		= 0x0020,
+	ISP_CTRL_R_GAIN         = 0x0040,
+	ISP_CTRL_GR_GAIN         = 0x0080,
+	ISP_CTRL_B_GAIN         = 0x0100,
+	ISP_CTRL_GB_GAIN         = 0x0200,
 } hw_isp_ctrl_cfg_ids;
-
 
 struct isp_test_pub_cfg {
 	HW_S32		test_mode;

@@ -37,6 +37,10 @@ typedef struct SYS_VIRMEM_INFO_S
     BOOL bCached;
 } SYS_VIRMEM_INFO_S;
 
+typedef struct MppBindControl {
+    int eDomain;
+}MppBindControl;
+
 typedef fd_set handle_set;
 
 #define ERR_SYS_NULL_PTR         DEF_ERR(MOD_ID_SYS, EN_ERR_LEVEL_ERROR, EN_ERR_NULL_PTR)

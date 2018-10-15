@@ -96,6 +96,8 @@ struct isp_3a_param {
 	HW_S32 ae_table_capture[42];
 	HW_S32 ae_table_video[42];
 	HW_S32 ae_win_weight[64];
+	HW_S32 ae_gain_favor;
+	HW_S32 ae_gain_range[4];
 	HW_S32 ae_hist_mod_en;
 	HW_S32 ae_hist_sel;
 	HW_S32 ae_stat_sel;

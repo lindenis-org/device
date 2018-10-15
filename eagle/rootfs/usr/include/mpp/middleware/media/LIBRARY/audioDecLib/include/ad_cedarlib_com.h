@@ -142,12 +142,8 @@ typedef struct __AudioDEC_AC320
 
 struct __AudioDEC_AC320 *AudioAACDecInit(void);
 int	 AudioAACDecExit(struct __AudioDEC_AC320 *p);
-struct __AudioDEC_AC320 *AudioAXXDecInit(void);
-int	 AudioAXXDecExit(struct __AudioDEC_AC320 *p);
 struct __AudioDEC_AC320 *AudioAPEDecInit(void);
 int	 AudioAPEDecExit(struct __AudioDEC_AC320 *p);
-struct __AudioDEC_AC320 *AudioDXXDecInit(void);
-int	 AudioDXXDecExit(struct __AudioDEC_AC320 *p);
 struct __AudioDEC_AC320 *AudioCOOKDecInit(void);
 int	 AudioCOOKDecExit(struct __AudioDEC_AC320 *p);
 struct __AudioDEC_AC320 *AudioSIPRDecInit(void);
@@ -162,8 +158,6 @@ struct __AudioDEC_AC320 *AudioAMRDecInit(void);
 int	 AudioAMRDecExit(struct __AudioDEC_AC320 *p);
 struct __AudioDEC_AC320 *AudioFLACDecInit(void);
 int	 AudioFLACDecExit(struct __AudioDEC_AC320 *p);
-struct __AudioDEC_AC320 *AudioWMADecInit(void);
-int	 AudioWMADecExit(struct __AudioDEC_AC320 *p);
 struct __AudioDEC_AC320 *AudioMP3DecInit(void);
 int	 AudioMP3DecExit(struct __AudioDEC_AC320 *p);
 struct __AudioDEC_AC320 *AudioRADecInit(void);

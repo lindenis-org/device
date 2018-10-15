@@ -330,17 +330,18 @@ typedef struct VencROIConfig {
     VencRect                sRect;
 }VencROIConfig;
 
-typedef struct VencH264FixQP {
+typedef struct VencFixQP {
     int                     bEnable;
     int                     nIQp;
     int                     nPQp;
-}VencH264FixQP;
+}VencFixQP;
 
 typedef enum {
     AW_CBR = 0,
     AW_VBR = 1,
     AW_AVBR = 2,
     AW_QPMAP = 3,
+    AW_FIXQP = 4,
 }VENC_RC_MODE;
 
 typedef struct VencInputBuffer {
@@ -404,7 +405,7 @@ typedef struct VeProcEncInfo {
 	int 						nQuality;
 
 	VENC_RC_MODE				eRcMode;
-	VencH264FixQP               fix_qp;
+	VencFixQP                   fix_qp;
 	int 						i_qp_offset;
     int                         qp_max;
     int                         qp_min;
@@ -553,17 +554,6 @@ typedef struct VencGopParam {
     unsigned int               nSpInterval;     //user set special p frame ref interval
     VencAdvancedRefParam       sRefParam;       //user set advanced ref frame mode
 }VencGopParam;
-
-typedef struct VencH264Param {
-    VencH264ProfileLevel    sProfileLevel;
-    int                     bEntropyCodingCABAC; /* 0:CAVLC 1:CABAC*/
-    VencQPRange               sQPRange;
-    int                     nFramerate; /* fps*/
-    int                     nBitrate;   /* bps*/
-    int                     nMaxKeyInterval;
-    VENC_CODING_MODE        nCodingMode;
-    VencGopParam            sGopParam;
-}VencH264Param;
 
 typedef struct VencCheckColorFormat {
     int                        index;
@@ -758,7 +748,7 @@ typedef enum VENC_INDEXTYPE {
     VENC_IndexParamH264CyclicIntraRefresh,
     /**< reference type: VencCyclicIntraRefresh */
     VENC_IndexParamH264FixQP,
-    /**< reference type: VencH264FixQP */
+    /**< reference type: VencFixQP */
     VENC_IndexParamH264SVCSkip,
     /**< reference type: VencH264SVCSkip */
     VENC_IndexParamH264AspectRatio,
@@ -943,20 +933,53 @@ typedef struct {
 }VencH265ProfileLevel;
 
 typedef struct {
-    VENC_RC_MODE            eRcMode;
-    unsigned int            uStatTime;
-    unsigned int            uInputFrmRate;
-    unsigned int            uOutputFrmRate;
     unsigned int            uMaxBitRate;
-    unsigned int            uMinIprop;
-    unsigned int            uMaxIprop;
-    int                     nMaxReEncodeTimes;
-    unsigned char           bQpMapEn;
+    unsigned int            uRatioChangeQp; //range[50,100], default:85
     int                     nQuality;       //range[1,13], 1:worst quality, 13:best quality
-    unsigned int            uMaxStaticIQp;
+}VencVbrParam;
+
+typedef struct {
+    unsigned char mode_ctrl_en;
+    unsigned char *p_info;
+}VencMBModeCtrl;
+
+typedef struct {
+    VENC_RC_MODE            eRcMode;
+    unsigned char           bUseSetMadThrdFlag;
+    unsigned char           uMadThrdI[12]; //range 0-255
+    unsigned char           uMadThrdP[12]; //range 0-255
+    unsigned char           uMadThrdB[12]; //no support
+    unsigned int            uStatTime;      //range [1,10], default:1
     unsigned int            uMinIQp;
-    unsigned int            uMaxIQp;
+    int                     nMaxReEncodeTimes; //default use one time
+
+    VencVbrParam            sVbrParam;      //valid only at AW_VBR/AW_AVBR
+    VencFixQP               sFixQp;         //valid only at AW_FIXQP
+    VencMBModeCtrl          sQpMap;         //valid only at AW_QPMAP
+
+    unsigned int            uRowQpDelta; //no support
+    unsigned int            uDirectionThrd; //no support
+    unsigned int            uQpDeltaLevelI; //no support
+    unsigned int            uQpDeltaLevelP; //no support
+    unsigned int            uQpDeltaLevelB; //no support
+    unsigned int            uInputFrmRate;  //no support
+    unsigned int            uOutputFrmRate; //no support
+    unsigned int            uFluctuateLevel;//no support
+    unsigned int            uMinIprop;      //no support
+    unsigned int            uMaxIprop;      //no support
 }VencRcParam;
+
+typedef struct VencH264Param {
+    VencH264ProfileLevel    sProfileLevel;
+    int                     bEntropyCodingCABAC; /* 0:CAVLC 1:CABAC*/
+    VencQPRange               sQPRange;
+    int                     nFramerate; /* fps*/
+    int                     nBitrate;   /* bps*/
+    int                     nMaxKeyInterval;
+    VENC_CODING_MODE        nCodingMode;
+    VencGopParam            sGopParam;
+    VencRcParam             sRcParam;
+}VencH264Param;
 
 typedef struct {
     int                     idr_period;
@@ -1048,11 +1071,6 @@ typedef struct {
     unsigned char mb_skip_flag; // {6}
     unsigned char mb_en; // {7}
 }VencMBModeCtrlInfo;
-
-typedef struct {
-    unsigned char mode_ctrl_en;
-    unsigned char *p_info;
-}VencMBModeCtrl;
 
 typedef struct {
     unsigned char hp_filter_en;

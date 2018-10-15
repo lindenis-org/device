@@ -121,6 +121,7 @@ typedef int DEMUX_CHN;
 typedef int MUX_GRP;
 typedef int MUX_CHN;
 typedef int CLOCK_CHN;
+typedef char* UVC_DEV;
 typedef int UVC_CHN;
 typedef int ISE_CHN;
 typedef int ISE_GRP;
@@ -365,6 +366,7 @@ typedef enum MPP_EVENT_TYPE {
     MPP_EVENT_NONE = 0,
     MPP_EVENT_RELEASE_VIDEO_BUFFER,  //VIDEO_FRAME_INFO_S for recorder/VIChannel::DoVdaThread, ISE, VO, VENC
     MPP_EVENT_VENC_TIMEOUT, //uint64_t*
+    MPP_EVENT_VENC_BUFFER_FULL, // NULL, the venc outbuffer  is full or too samall.
     MPP_EVENT_RELEASE_ISE_VIDEO_BUFFER0,  //VIDEO_FRAME_INFO_S for recorder/VIChannel::DoVdaThread, ISE, VO, VENC
     MPP_EVENT_RELEASE_ISE_VIDEO_BUFFER1,  //VIDEO_FRAME_INFO_S for recorder/VIChannel::DoVdaThread, ISE, VO, VENC
     MPP_EVENT_RELEASE_AUDIO_BUFFER,  //AUDIO_FRAME_S

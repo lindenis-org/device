@@ -31,6 +31,7 @@ ERRORTYPE AW_MPI_SYS_SetConf(const MPP_SYS_CONF_S* pSysConf);
 ERRORTYPE AW_MPI_SYS_GetConf(MPP_SYS_CONF_S* pSysConf);
 
 ERRORTYPE  AW_MPI_SYS_Bind(MPP_CHN_S* pSrcChn, MPP_CHN_S* pDestChn);
+ERRORTYPE  AW_MPI_SYS_BindExt(MPP_CHN_S* pSrcChn, MPP_CHN_S* pDestChn, MppBindControl* pBindControl);
 ERRORTYPE  AW_MPI_SYS_UnBind(MPP_CHN_S* pstSrcChn, MPP_CHN_S* pstDestChn);
 ERRORTYPE  AW_MPI_SYS_GetBindbyDest(MPP_CHN_S* pstDestChn, MPP_CHN_S* pstSrcChn);
 

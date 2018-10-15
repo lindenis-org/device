@@ -197,6 +197,8 @@ typedef struct VCONFIG
     int               bSetProcInfoEnable; //* for check the decoder info by cat devices-note
     int               nSetProcInfoFreq;
     int               nChannelNum;
+    int               nSupportMaxWidth;  //the max width of mjpeg continue decode
+    int               nSupportMaxHeight; //the max height of mjpeg continue decode
 }VConfig;
 
 typedef struct VIDEOSTREAMDATAINFO

@@ -26,6 +26,7 @@ extern "C" {
 typedef struct VDecCompOutputFrame
 {
     VideoPicture    *mpPicture; //unit:us
+    VideoPicture    *mpSubPicture;
     struct list_head mList;
 }VDecCompOutputFrame;
 

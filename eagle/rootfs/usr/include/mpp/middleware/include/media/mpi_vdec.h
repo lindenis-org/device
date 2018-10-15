@@ -17,6 +17,7 @@
 #include "mm_common.h"
 #include "mm_comm_video.h"
 #include "mm_comm_vdec.h"
+#include "vdecoder.h"
 
 #ifdef __cplusplus
 extern "C"{
@@ -55,6 +56,9 @@ ERRORTYPE AW_MPI_VDEC_SendStream(VDEC_CHN VdChn, const VDEC_STREAM_S *pStream, i
 ERRORTYPE AW_MPI_VDEC_GetImage(VDEC_CHN VdChn, VIDEO_FRAME_INFO_S *pFrameInfo,int nMilliSec);
 ERRORTYPE AW_MPI_VDEC_ReleaseImage(VDEC_CHN VdChn, VIDEO_FRAME_INFO_S *pFrameInfo);
 
+ERRORTYPE AW_MPI_VDEC_GetDoubleImage(VDEC_CHN VdChn, VIDEO_FRAME_INFO_S *pFrameInfo, VIDEO_FRAME_INFO_S *pSubFrameInfo,int nMilliSec);
+ERRORTYPE AW_MPI_VDEC_ReleaseDoubleImage(VDEC_CHN VdChn, VIDEO_FRAME_INFO_S *pFrameInfo, VIDEO_FRAME_INFO_S *pSubFrameInfo);
+
 //ERRORTYPE AW_MPI_VDEC_GetUserData(VDEC_CHN VdChn, VDEC_USERDATA_S *pstUserData, int s32MilliSec);
 //ERRORTYPE AW_MPI_VDEC_ReleaseUserData(VDEC_CHN VdChn, VDEC_USERDATA_S *pstUserData);
 
@@ -73,6 +77,8 @@ ERRORTYPE AW_MPI_VDEC_ReopenVideoEngine(VDEC_CHN VdChn);
 //ERRORTYPE AW_MPI_VDEC_GetDisplayMode(VDEC_CHN VdChn, VIDEO_DISPLAY_MODE_E *penDisplayMode);
 
 ERRORTYPE AW_MPI_VDEC_SetVEFreq(VDEC_CHN VeChn, int nFreq); //nFreq: MHz
+
+ERRORTYPE AW_MPI_VDEC_SetVideoStreamInfo(VDEC_CHN VdChn, VideoStreamInfo *pVideoStreamInfo);
 
 #ifdef __cplusplus
 }

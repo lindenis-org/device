@@ -224,6 +224,7 @@ typedef enum EAUDIOCODECFORMAT
 #define WAVE_FORMAT_EXTENSIBTS		          0xFFFD /* LSZHANG TS */
 #define WAVE_FORMAT_EXTENSIBLE              0xFFFE  /* SubFormat */
 #define WAVE_FORMAT_DEVELOPMENT             0xFFFF  /* Development */
+#define WAVE_FORMAT_DVD_LPCM                0xFFA0  /* Added by Khan for DVD-LPCM*/
 
 //user define adpcm codec type from video file
 #define ADPCM_CODEC_ID_IMA_QT               0xE000

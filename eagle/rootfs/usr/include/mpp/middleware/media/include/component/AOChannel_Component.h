@@ -81,6 +81,7 @@ typedef struct AO_CHN_DATA_S {
     volatile BOOL start_to_play;
     volatile int priv_flag;
     int audio_rend_flag;
+    PCM_CARD_TYPE_E card_id;
 
     int wait_time_out;
     BOOL is_ref_clock;

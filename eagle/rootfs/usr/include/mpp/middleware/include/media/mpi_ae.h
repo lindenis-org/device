@@ -30,10 +30,10 @@ extern "C" {
 	AE
 \****************************************************/
 
+#if 0 /* not open customer */
 AW_S32 AW_MPI_ISP_AE_SetWeightAttr(ISP_DEV IspDev, ISP_AE_WEIGHT_S *pWeight);
 AW_S32 AW_MPI_ISP_AE_GetWeightAttr(ISP_DEV IspDev, ISP_AE_WEIGHT_S *pWeight);
 
-#if 0 /* not open customer */
 AW_S32 AW_MPI_ISP_AE_SetExposureAttr(ISP_DEV IspDev, const ISP_AE_ATTR_PUB_S *pstExpAttr);
 AW_S32 AW_MPI_ISP_AE_GetExposureAttr(ISP_DEV IspDev, ISP_AE_ATTR_PUB_S *pstExpAttr);
 AW_S32 AW_MPI_ISP_AE_SetTableAttr(ISP_DEV IspDev, AW_S32 mode, ISP_AE_TABLE_S *pTable);

@@ -373,7 +373,8 @@ typedef enum COMP_INDEXTYPE {
     COMP_IndexVendorExtraData,      /**< reference: VencHeaderData, for h264: spspps */
     //COMP_IndexVendorFsWriteMode, /**< reference: FSWRITEMODE */
     //COMP_IndexVendorFsSimpleCacheSize,   /**< reference: int */
-
+    COMP_IndexVendorMuxSwitchPolicy,   /** RecordFileDurationPolicy  */
+    
     // below for demux
     COMP_IndexVendorDemuxChnAttr,   /**< reference: DEMUX_ATTR_S */
     COMP_IndexVendorDemuxResetChannel,   /**< reference: NULL */
@@ -414,6 +415,7 @@ typedef enum COMP_INDEXTYPE {
     COMP_IndexVendorAISetSaveFileInfo,      /**< reference: AUDIO_SAVE_FILE_INFO_S */
     COMP_IndexVendorAIQueryFileStatus,      /**< reference: AUDIO_SAVE_FILE_INFO_S */
     COMP_IndexVendorAIChnMute,           /**< reference: BOOL* */
+    COMP_IndexVendorAOChnPcmCardType,
     COMP_IndexVendorAOChnSendFrame,         /**< reference: AudioFrame */
     COMP_IndexVendorAOQueryChnStat,
     COMP_IndexVendorAOPauseChn,
@@ -510,14 +512,15 @@ typedef enum COMP_INDEXTYPE {
     COMP_IndexVendorConfigTimeClientForceStart,
     COMP_IndexConfigWallTimeBase,   /**< reference: int64_t, media_time, modify WallTimeBase according to new media_time, implicitly modify media time of clock component */
         
-		/* Uvc vendor*/
-		COMP_IndexVendorUvcChnAttr,     	/**< reference: Get/Set Attr*/
-		COMP_IndexVendorUvcProcessThreadStart,	  		/**< reference:  */
-		COMP_IndexVendorUvcGetThreadStart,	
-		COMP_IndexVendorUvcProcessThreadStop,	  		/**< reference:  */
-		COMP_IndexVendorUvcGetThreadStop,	
-		COMP_IndexVendorGetUvcFrame,	   	/**< reference:	*/
-		COMP_IndexVendorReleaseUvcFrame,   /**< reference:	*/
+	/* Uvc vendor*/
+	COMP_IndexVendorUvcChnAttr,     	/**< reference: Get/Set Attr*/
+	COMP_IndexVendorUvcProcessThreadStart,	  		/**< reference:  */
+	COMP_IndexVendorUvcGetThreadStart,	
+	COMP_IndexVendorUvcProcessThreadStop,	  		/**< reference:  */
+	COMP_IndexVendorUvcGetThreadStop,	
+	COMP_IndexVendorGetUvcFrame,	   	/**< reference:	*/
+	COMP_IndexVendorReleaseUvcFrame,   /**< reference:	*/
+	COMP_IndexVendorUvcSetDevInfo,
     
     COMP_IndexMax = 0x7FFFFFFF
 

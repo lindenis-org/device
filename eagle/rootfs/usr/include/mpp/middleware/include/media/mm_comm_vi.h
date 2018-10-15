@@ -70,6 +70,7 @@ extern "C" {
 #define ERR_VI_INVALIDSTATE DEF_ERR(MOD_ID_VIU, EN_ERR_LEVEL_ERROR, EN_ERR_INVALIDSTATE)
 #define ERR_VI_INCORRECT_STATE_TRANSITION DEF_ERR(MOD_ID_VIU, EN_ERR_LEVEL_ERROR, EN_ERR_INCORRECT_STATE_TRANSITION)
 #define ERR_VI_INCORRECT_STATE_OPERATION DEF_ERR(MOD_ID_VIU, EN_ERR_LEVEL_ERROR, EN_ERR_INCORRECT_STATE_OPERATION)
+#define ERR_VI_EIS_EFUSE_ERR DEF_ERR(MOD_ID_VIU, EN_ERR_LEVEL_ERROR, EN_ERR_EFUSE_ERROR)
 
 //typedef unsigned char AW_U8;
 //typedef unsigned short AW_U16;
@@ -348,19 +349,44 @@ typedef enum awVI_INT_SEL_E {
     VI_INT_ALL = 0XFF,
 } VI_INT_SEL_E;
 
+typedef struct awANTISHAKE_KMAT_S {
+    float KmatK1;
+    float KmatK2;
+    float KmatKx;
+    float KmatKy;
+} ANTISHAKE_KMAT_S;
+
 typedef struct awANTISHAKE_ATTR_S {
     int frame_width;
     int frame_height;
     int frame_width_strie;
     int frame_height_strie;
-    // float output_scale;
-    // float gyro_frequency_in_Hz;
-    // float target_fps;
     int number_of_input_buffers;
     int number_of_output_buffers;
     int operation_mode;
     int rq;
+    int style;
+    /*
+    * we got default k-mat values for imx317 in SDK.
+    * but if you have other sensors, you should set
+    * <use_custom_kmat=1>,and fill <antishake_kmat>.
+    * the important thing is: you must be responsible for your own values.
+    */
+    bool use_custom_kmat;
+    ANTISHAKE_KMAT_S antishake_kmat;
 } ANTISHAKE_ATTR_S;
+
+/*
+ * vi shutter time configuration
+ */
+typedef struct awVI_SHUTTIME_CFG_S {
+    int iTime;        //frame interval:[1/500S]->[iTime=500] [1/125S]->[iTime=125]
+                      //               [1S]->[iTime=-1]      [5S]->[iTime=5]
+    int iExpValue;    //not use until now
+    int iGainValue;   //not use until now
+    int iShutterMode; //0:auto shutter(30fps,auto exp_abs)
+                      //1:preview mode(fps>=30) 2:night view mode(fps<30)
+} VI_SHUTTIME_CFG_S;
 
 typedef struct awVI_ATTR_S {
     enum v4l2_buf_type type;
@@ -372,9 +398,10 @@ typedef struct awVI_ATTR_S {
     unsigned int capturemode;   //V4L2_MODE_VIDEO
     unsigned int use_current_win;   //0:config ISP param again; 1:use current ISP param
     unsigned int wdr_mode;
+    unsigned int drop_frame_num; // drop frames number after enable vipp device(default 0).
 
     int antishake_enable; // 1:enable; 0:disable
-    ANTISHAKE_ATTR_S antishake_attr; 
+    ANTISHAKE_ATTR_S antishake_attr;
 } VI_ATTR_S;
 
 struct rect {

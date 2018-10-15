@@ -40,6 +40,7 @@ typedef enum CdxPixelFormat{
     CDX_PIXEL_FORMAT_AW_MB411           = 0x103,
     CDX_PIXEL_FORMAT_AW_MB422           = 0x104,
     CDX_PIXEL_FORMAT_AW_YUV_PLANNER420  = 0x105,
+    CDX_PIXEL_FORMAT_AW_NV61            = 0x106,    //yvu422, NV61
 
     CDX_PIXEL_FORMAT_YV12                   = 0x32315659, // YCrCb 4:2:0 Planar, HAL_PIXEL_FORMAT_YV12
     CDX_PIXEL_FORMAT_RAW_SENSOR             = 0x20,

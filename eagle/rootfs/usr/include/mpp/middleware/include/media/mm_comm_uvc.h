@@ -14,12 +14,15 @@
 #ifndef __MM_COMM_UVC_H__
 #define __MM_COMM_UVC_H__
 
+#pragma once
+
 #include "plat_type.h"
 #include "plat_errno.h"
 //#include "typedef.h"
 #include "mm_common.h"
 //#include "mm_comm_video.h"
 //#include "mm_comm_rc.h"
+#include <linux/videodev2.h>
 
 /* invlalid channel ID */
 #define ERR_UVC_INVALID_CHNID     DEF_ERR(MOD_ID_UVC, EN_ERR_LEVEL_ERROR, EN_ERR_INVALID_CHNID)
@@ -98,6 +101,101 @@ typedef struct UVC_CHN_ATTR_S
     USB_VIDEO_CAMERA_ATTR_S UVC_ATTR;
     VDECODER_ATTR_S VDECODER_ATTR;
 }UVC_CHN_ATTR_S;
+
+typedef struct UVCVideoControl
+{
+    //Terminal Control
+    char bAutoExposureMode;
+    char bAutoExposurePriority;
+    int dwExposureTimeAbsolute; //1:100us
+    char bExposureTimeRelative;
+    
+    short wIrisAbsolute;
+    char bIrisRelative;  
+    
+    char bPrivacy; 
+    
+    //Unit Control
+    short wBacklightCompensation;
+    short wBrightness;
+    
+    short wContrast;
+
+    short wGain;
+
+    char bPowerLineFrequency;//0:disable, 1:50Hz, 2:60HZ
+
+    short wHue;
+    char bHueAuto;
+    
+    short wSaturation;
+
+    short wSharpness;
+
+    short wGamma;
+
+    short wWhiteBalanceTemperature;
+    char wWhiteBalanceTemperatureAuto;
+    short wWhiteBalanceBlue;
+    short wWhiteBalanceRed;
+    char bWhiteBalanceComponentAuto;       
+    
+}UVCVideoControl;
+
+typedef struct UVCMotionControl
+{
+    //Terminal Control
+    short wFocusAbsolute;
+    char bFocusRelative;
+    char bSpeed;
+    char bFocusAuto;
+    
+    short wObjectveFocallLength;
+    char bZoom;
+    char DigitalZoom;
+    char bZoomSpeed;
+
+    int dwPanAbsolute;
+    int dwTilAbsolute;
+
+    char bPanRelative;
+    char bPanSpeed;
+    char bTiltRelative;
+    char bTiltSpeed;
+
+    short wRollAbsolute;
+    char bRollRelative;
+    char bRollSpeed;
+    
+}UVCMotionControl;
+
+typedef enum UVC_CAPTURE_FORMAT
+{ 
+    //base on the UVC class 1.1
+    UVC_YUY2 = V4L2_PIX_FMT_YUYV,
+    UVC_NV12 = V4L2_PIX_FMT_YUV420, // 
+    UVC_H264 = V4L2_PIX_FMT_H264,
+    UVC_MJPEG = V4L2_PIX_FMT_MJPEG
+}UVC_CAPTURE_FORMAT;
+
+
+typedef struct UVC_ATTR_S
+{
+//    v4l2_format mFmt;
+//    v4l2_capability mCap;
+//    v4l2_streamparm mStreamParm;
+//    v4l2_buffer mBuf;
+//    v4l2_requestbuffers mRBuf;
+//    v4l2_timecode mTimeCode;
+    UVC_CAPTURE_FORMAT mPixelformat;   //[in]
+    unsigned int mUvcVideo_Width;    //[in]
+    unsigned int mUvcVideo_Height;   //[in]
+    unsigned int mUvcVideo_Fps;
+    
+//    UVCVideoControl mUvcVideoAttr;
+//    UVCMotionControl mUvcMotionAttr;
+}UVC_ATTR_S;
+
 
 typedef enum UvcMsgType {
     SetThreadState = 1,

@@ -18,6 +18,7 @@
 #define _AW_VI_API_H_
 
 #include "mm_comm_vi.h"
+#include "mm_comm_region.h"
 
 #ifdef __cplusplus
 #if __cplusplus
@@ -39,6 +40,7 @@ AW_S32 AW_MPI_VI_SetVippFlip(VI_DEV ViDev, int Value);
 AW_S32 AW_MPI_VI_GetVippFlip(VI_DEV ViDev, int *Value);
 AW_S32 AW_MPI_VI_EnableVipp(VI_DEV ViDev);
 AW_S32 AW_MPI_VI_DisableVipp(VI_DEV ViDev);
+AW_S32 AW_MPI_VI_SetVippShutterTime(VI_DEV ViDev, VI_SHUTTIME_CFG_S *pTime);
 
 AW_S32 AW_MPI_VI_CreateVirChn(VI_DEV ViDev, VI_CHN ViCh, void *pAttr);
 AW_S32 AW_MPI_VI_DestoryVirChn(VI_DEV ViDev, VI_CHN ViCh);
@@ -54,9 +56,13 @@ AW_S32 AW_MPI_VI_ReleaseFrame(VI_DEV ViDev, VI_CHN ViCh, VIDEO_FRAME_INFO_S *pst
 AW_S32 AW_MPI_VI_SetVIFreq(VI_DEV ViDev, int nFreq); //nFreq: MHz
 AW_S32 AW_MPI_VI_GetInfo(); /* get bind config */
 
-
 //AW_S32 AW_MPI_VI_SetOsdMaskRegion(VI_DEV ViDev, VI_OsdMaskRegion *pstOsdMaskRegion);
 //AW_S32 AW_MPI_VI_UpdateOsdMaskRegion(VI_DEV ViDev, AW_U32 OnOff);
+
+/**
+ * Set region flip flag.
+ */
+ERRORTYPE AW_MPI_VI_SetRegionFlipFlag(VI_DEV ViDev, RGN_FLIP_FLAG_E FlipFlag);
 
 #ifdef __cplusplus
 #if __cplusplus

@@ -39,6 +39,8 @@ ERRORTYPE AW_MPI_AO_DisableChn(AUDIO_DEV AudioDevId, AO_CHN AoChn);
 
 ERRORTYPE AW_MPI_AO_RegisterCallback(AUDIO_DEV AudioDevId, AO_CHN AoChn, MPPCallbackInfo *pCallback);
 
+ERRORTYPE AW_MPI_AO_SetPcmCardType(AUDIO_DEV AudioDevId, AO_CHN AoChn, PCM_CARD_TYPE_E cardId);
+
 ERRORTYPE AW_MPI_AO_StartChn(AUDIO_DEV AudioDevId, AO_CHN AoChn);
 ERRORTYPE AW_MPI_AO_StopChn(AUDIO_DEV AudioDevId, AO_CHN AoChn);
 

@@ -19,7 +19,6 @@
 #define _ISP_INI_PARSE_H_
 #include "isp_manage.h"
 #include "isp_debug.h"
-#include "platform.h"
 
 struct isp_cfg_pt
 {

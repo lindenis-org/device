@@ -25,7 +25,15 @@ extern "C"{
 
 
 
-
+/* region flip value*/
+typedef enum RGN_FLIP_FLAG_E
+{
+    RGN_FLIP_NONE       = 0,
+    RGN_FLIP_HFLIP      = (1<<0),
+    RGN_FLIP_VFLIP      = (1<<1),
+    RGN_FLIP_BOTH_FLIP  = (RGN_FLIP_HFLIP | RGN_FLIP_VFLIP),
+    RGN_FLIP_BUTT
+} RGN_FLIP_FLAG_E;
 
 typedef unsigned int RGN_HANDLE;
 
