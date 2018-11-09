@@ -13,6 +13,7 @@ eraseflag   = 0
 [target]
 boot_clock   	= 1008
 storage_type    = -1
+lindenis_test   = 1
 
 ;----------------------------------------------------------------------------------
 ;   key setting
