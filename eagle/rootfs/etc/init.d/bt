@@ -1,0 +1,50 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          mpp
+# Required-Start:    $local_fs
+# Required-Stop::    $local_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: mpp dependent service
+# Description:       mpp dependent service
+### END INIT INFO
+
+USER=root
+
+BT_SERVER_NAME=bt_server
+BT_SERVER=/usr/bin/$BT_SERVER_NAME
+BT_SERVER_PIDFILE=/var/run/$BT_SERVER_NAME.pid
+BT_SERVER_ARGS="/tmp"
+
+test -f $BT_SERVER || exit 0
+
+. /lib/lsb/init-functions
+
+case "$1" in
+	start)
+		log_daemon_msg "Starting btlodaer_server" "bt_server"
+		start-stop-daemon -S -q -b -m -p $BT_SERVER_PIDFILE -c $USER -a $BT_SERVER -- $BT_SERVER_ARGS
+		log_end_msg $?
+		;;
+
+	stop)
+		log_daemon_msg "Stoping bt_server" "bt_server"
+		start-stop-daemon -K -q -p $BT_SERVER_PIDFILE
+		log_end_msg $?
+		;;
+
+	restart|reload|force-reload)
+		log_daemon_msg "Restarting bt_server" "bt_server"
+		start-stop-daemon -K -R 5 -q -p $BT_SERVER_PIDFILE
+		start-stop-daemon -S -q -b -m -p $BT_SERVER_PIDFILE -c $USER -a $BT_SERVER -- $BT_SERVER_ARGS
+		log_end_msg $?
+		;;
+
+	status)
+		;;
+
+	*)
+		exit 2
+		;;
+esac
+exit 0
