@@ -16,7 +16,9 @@ TTY="/dev/ttyS1"
 
 BT_POWER_MGR_PATH=/sys/class/rfkill/rfkill0
 BT_FW_PATH=/lib/firmware/rtl_bt
+WIFI_CONF=/etc/modules-load.d/wifi.conf
 
+test -f $WIFI_CONF || exit 1
 test -d $BT_POWER_MGR_PATH || exit 1
 test -d $BT_FW_PATH || exit 1
 
