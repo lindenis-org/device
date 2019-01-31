@@ -1,12 +1,12 @@
 #!/bin/bash
 ### BEGIN INIT INFO
-# Provides:          mpp
+# Provides:          ldbt
 # Required-Start:    $local_fs
 # Required-Stop::    $local_fs
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: mpp dependent service
-# Description:       mpp dependent service
+# Short-Description: ldbt dependent service
+# Description:       ldbt dependent service
 ### END INIT INFO
 
 USER=root
